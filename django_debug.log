@@ -128,3 +128,5 @@ django.core.exceptions.RequestDataTooBig: Request body exceeded settings.DATA_UP
 2026-10-15 15:50:28,448 ERROR django.request: Bad Gateway: /api/contact
 2026-10-15 15:50:28,448 INFO contact.views: [308334592fa6] Contact message delivered via smtp (sender domain: example.com)
 2026-10-15 17:04:27,578 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2026-10-15 17:25:07,339 INFO django.utils.autoreload: D:\Khuswanth protfolio\server\.venv\Lib\site-packages\django\conf\global_settings.py changed, reloading.
+2026-10-15 17:25:56,687 INFO django.utils.autoreload: Watching for file changes with StatReloader
