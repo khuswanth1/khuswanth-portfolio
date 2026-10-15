@@ -127,5 +127,4 @@ django.core.exceptions.RequestDataTooBig: Request body exceeded settings.DATA_UP
 2026-10-15 15:50:28,448 ERROR contact.services: [a38a9f35ff6d] SMTP delivery failed: OSError: smtp down
 2026-10-15 15:50:28,448 ERROR django.request: Bad Gateway: /api/contact
 2026-10-15 15:50:28,448 INFO contact.views: [308334592fa6] Contact message delivered via smtp (sender domain: example.com)
-2026-10-15 15:55:53,686 INFO django.utils.autoreload: Watching for file changes with StatReloader
-2026-10-15 15:57:02,561 INFO contact.views: [4235cfd49574] Contact message delivered via smtp (sender domain: private.com)
+2026-10-15 17:04:27,578 INFO django.utils.autoreload: Watching for file changes with StatReloader
