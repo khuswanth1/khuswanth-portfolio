@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   LuSend, LuMail, LuLinkedin, LuGithub, LuMapPin, LuPhone, LuLoaderCircle, LuCopy, LuCheck,
 } from 'react-icons/lu';
@@ -61,6 +61,12 @@ export default function Contact() {
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState({ type: 'idle', message: '' }); // idle | loading | success | error
   const [toast, setToast] = useState(null);
+
+  // Free hosts put idle servers to sleep. A background ping when the page loads wakes the API
+  // so it is ready by the time a visitor reaches the form. The response is ignored (no-cors).
+  useEffect(() => {
+    if (API_URL) fetch(`${API_URL}/`, { mode: 'no-cors' }).catch(() => {});
+  }, []);
   const closeToast = useCallback(() => setToast(null), []);
   const notify = (type, title, message, action) => setToast({ id: Date.now(), type, title, message, action });
   const [copied, setCopied] = useState(false);
@@ -120,7 +126,7 @@ export default function Contact() {
 
     setStatus({ type: 'loading', message: '' });
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 15000);
+    const timeout = setTimeout(() => controller.abort(), 45000);
 
     try {
       const res = await fetch(`${API_URL}/api/contact`, {
