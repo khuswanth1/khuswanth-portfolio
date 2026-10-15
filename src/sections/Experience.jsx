@@ -1,100 +1,123 @@
-import { motion } from 'framer-motion';
-import { WorkOutline, CheckCircleOutline } from '@mui/icons-material';
-import SectionHeading from '../components/SectionHeading';
+import { useEffect, useRef } from 'react';
+import { LuMapPin, LuArrowUpRight } from 'react-icons/lu';
+import Section from '../components/Section';
+import Reveal from '../components/Reveal';
 import { experience } from '../data/personal';
-import useInView from '../hooks/useInView';
+
+/**
+ * Scroll-linked timeline: the line fills as you scroll through the section and each role's
+ * dot lights up once the fill reaches it. Writes straight to the DOM (no React re-renders).
+ */
+function useTimelineProgress() {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const root = ref.current;
+    if (!root) return undefined;
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const anchor = window.innerHeight * 0.6;
+      const box = root.getBoundingClientRect();
+      const ratio = Math.min(Math.max((anchor - box.top) / box.height, 0), 1);
+      root.style.setProperty('--tl', ratio.toFixed(3));
+      root.querySelectorAll('[data-job]').forEach((li) => {
+        li.dataset.active = li.getBoundingClientRect().top + 24 < anchor ? 'true' : 'false';
+      });
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  return ref;
+}
 
 export default function Experience() {
-  const { ref, inView } = useInView();
+  const timelineRef = useTimelineProgress();
 
   return (
-    <section id="experience" className="relative z-10 py-24">
-      <div className="container-x">
-        <SectionHeading
-          kicker="Career Path"
-          title="Where I've worked & grown"
-          description="From internships to professional frontend development — my journey so far."
-        />
-
-        <div ref={ref} className="relative mx-auto max-w-3xl">
-          {/* Vertical line */}
-          <span className="absolute left-4 top-2 bottom-2 w-px bg-gradient-to-b from-primary via-secondary to-transparent sm:left-1/2" />
-
-          <div className="space-y-10">
-            {experience.map((job, i) => {
-              const leftSide = i % 2 === 0;
-              return (
-                <motion.div
-                  key={job.role + job.company}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={inView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.55, delay: i * 0.1 }}
-                  className={`relative flex sm:w-1/2 ${
-                    leftSide ? 'sm:pr-10' : 'sm:ml-auto sm:pl-10'
-                  } pl-12 sm:pl-10`}
-                >
-                  {/* Timeline dot */}
-                  <span
-                    className={`absolute top-1.5 grid h-8 w-8 place-items-center rounded-full border-2 border-dark-950 bg-gradient-to-br from-primary to-secondary text-white shadow-glow left-0 sm:left-auto ${
-                      leftSide ? 'sm:-right-4' : 'sm:-left-4'
-                    }`}
-                  >
-                    <WorkOutline fontSize="small" />
+    <Section
+      id="experience"
+      kicker="Experience"
+      title="Where I've worked"
+      description="A year and a half in production front-end work, after internships across full-stack Java development, web fundamentals and software engineering."
+    >
+      <div ref={timelineRef} className="relative">
+      <Reveal as="ol" className="relative space-y-6 sm:space-y-8">
+        <span aria-hidden="true" className="absolute bottom-2 left-[7px] top-2 w-px bg-line/30" />
+        <span aria-hidden="true" className="timeline-fill absolute bottom-2 left-[6px] top-2 w-[3px] rounded-full" />
+        {experience.map((job, i) => (
+          <Reveal as="li" key={job.id} data-job delay={i * 80} className="reveal-left relative pl-9 sm:pl-12">
+            {i === 0 && (
+              <span
+                aria-hidden="true"
+                className="absolute left-0 top-6 h-[15px] w-[15px] animate-ping rounded-full bg-blue-500/60 motion-reduce:hidden"
+              />
+            )}
+            <span
+              aria-hidden="true"
+              className="dot-pop tl-dot absolute left-0 top-6 h-[15px] w-[15px] rounded-full border-[3px] border-bg"
+            />
+            <article className="card p-6 sm:p-7 border-line/20 bg-surface/90">
+              <header className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <h3 className="text-lg font-bold text-white sm:text-xl">{job.role}</h3>
+                  <p className="mt-1 text-sm font-semibold text-blue-400">{job.company}</p>
+                </div>
+                <div className="flex flex-wrap items-center gap-2 sm:flex-col sm:items-end">
+                  <span className="chip !text-blue-200 border-blue-500/30 bg-blue-950/40">{job.period}</span>
+                  <span className="inline-flex items-center gap-1 text-xs text-slate-400">
+                    <LuMapPin className="h-3.5 w-3.5 text-blue-400" aria-hidden="true" />
+                    {job.location} · {job.type}
                   </span>
+                </div>
+              </header>
 
-                  <div className="glass glass-hover w-full rounded-2xl p-6">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <h3 className="font-bold text-white">{job.role}</h3>
-                      {job.current && (
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-400/10 px-3 py-1 font-mono text-[10px] font-semibold text-emerald-300">
-                          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
-                          CURRENT
-                        </span>
-                      )}
-                    </div>
-                    <p className="mt-1 text-sm font-medium text-secondary">{job.company}</p>
-                    <div className="mt-2 flex flex-wrap items-center gap-2">
-                      <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 font-mono text-[10px] text-slate-400">
-                        {job.period}
-                      </span>
-                      <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 font-mono text-[10px] text-slate-400">
-                        {job.type}
-                      </span>
-                    </div>
-                    {job.description && (
-                      <p className="mt-3 text-xs leading-relaxed text-slate-300">
-                        {job.description}
-                      </p>
-                    )}
-                    {job.points && (
-                      <ul className="mt-4 space-y-2">
-                        {job.points.map((point) => (
-                          <li key={point} className="flex items-start gap-2 text-xs sm:text-sm text-slate-400">
-                            <CheckCircleOutline className="mt-0.5 shrink-0 text-primary" fontSize="small" />
-                            {point}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                    {job.technologies && (
-                      <div className="mt-4 flex flex-wrap gap-1.5 pt-2 border-t border-white/5">
-                        {job.technologies.map((tech) => (
-                          <span
-                            key={tech}
-                            className="rounded-md bg-white/5 px-2 py-0.5 font-mono text-[10px] text-slate-300 border border-white/10"
-                          >
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
+              <p className="mt-4 text-sm leading-relaxed text-slate-300">{job.summary}</p>
+
+              <ul className="mt-4 space-y-2.5">
+                {job.points.map((point, n) => (
+                  <li key={point.slice(0, 32)} style={{ '--i': n }} className="stagger-li flex gap-3 text-sm leading-relaxed text-slate-300">
+                    <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-400 shadow-[0_0_4px_rgba(96,165,250,0.6)]" />
+                    {point}
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-line/15 pt-4">
+                <ul className="flex flex-wrap gap-1.5" aria-label={`Technologies used at ${job.company}`}>
+                  {job.tech.map((t) => (
+                    <li key={t} className="chip">
+                      {t}
+                    </li>
+                  ))}
+                </ul>
+                {job.link && (
+                  <a
+                    href={job.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-blue-400 hover:text-blue-300 hover:underline"
+                  >
+                    See internship work
+                    <LuArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+                  </a>
+                )}
+              </div>
+            </article>
+          </Reveal>
+        ))}
+      </Reveal>
       </div>
-    </section>
+    </Section>
   );
 }

@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const token = (name) => `rgb(var(--${name}) / <alpha-value>)`;
+
 export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
@@ -8,48 +10,49 @@ export default {
       md: '768px',
       lg: '1024px',
       xl: '1280px',
-      '2xl': '1536px',
     },
     extend: {
       colors: {
-        primary: '#6d5dfc',
-        secondary: '#22d3ee',
-        accent: '#f472b6',
-        dark: {
-          950: '#05060f',
-          900: '#0a0c1c',
-          800: '#10132a',
-          700: '#1a1e3d',
+        bg: token('bg'),
+        surface: token('surface'),
+        'surface-2': token('surface-2'),
+        line: token('line'),
+        fg: token('fg'),
+        muted: token('muted'),
+        accent: token('accent'),
+        'accent-2': token('accent-2'),
+        success: token('success'),
+        danger: token('danger'),
+        navy: {
+          950: '#060a12',
+          900: '#0a0f1d',
+          850: '#0e1526',
+          800: '#131b2e',
+          700: '#1e293b',
+          600: '#334155',
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        mono: ['"JetBrains Mono"', 'monospace'],
-      },
-      animation: {
-        'gradient-x': 'gradient-x 8s ease infinite',
-        float: 'float 6s ease-in-out infinite',
-        'spin-slow': 'spin 14s linear infinite',
-        blob: 'blob 18s ease-in-out infinite',
-      },
-      keyframes: {
-        'gradient-x': {
-          '0%, 100%': { backgroundPosition: '0% 50%' },
-          '50%': { backgroundPosition: '100% 50%' },
-        },
-        float: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-14px)' },
-        },
-        blob: {
-          '0%, 100%': { transform: 'translate(0,0) scale(1)' },
-          '33%': { transform: 'translate(40px,-50px) scale(1.15)' },
-          '66%': { transform: 'translate(-30px,30px) scale(0.9)' },
-        },
+        display: ['"Bricolage Grotesque"', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
       },
       boxShadow: {
-        glow: '0 0 40px -10px rgba(109, 93, 252, 0.55)',
-        'glow-cyan': '0 0 40px -10px rgba(34, 211, 238, 0.5)',
+        card: '0 1px 2px rgb(0 0 0 / 0.04), 0 8px 24px -12px rgb(0 0 0 / 0.12)',
+        lift: '0 2px 4px rgb(0 0 0 / 0.04), 0 24px 48px -20px rgb(var(--accent) / 0.35)',
+      },
+      keyframes: {
+        'fade-in': { from: { opacity: 0 }, to: { opacity: 1 } },
+        'dialog-in': {
+          from: { opacity: 0, transform: 'translateY(16px) scale(0.98)' },
+          to: { opacity: 1, transform: 'translateY(0) scale(1)' },
+        },
+        marquee: { from: { transform: 'translateX(0)' }, to: { transform: 'translateX(-50%)' } },
+      },
+      animation: {
+        'fade-in': 'fade-in 200ms ease-out',
+        'dialog-in': 'dialog-in 260ms cubic-bezier(0.2, 0.8, 0.2, 1)',
+        marquee: 'marquee 40s linear infinite',
       },
     },
   },

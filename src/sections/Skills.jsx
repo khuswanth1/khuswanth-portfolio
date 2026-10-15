@@ -1,99 +1,76 @@
-import { motion } from 'framer-motion';
-import SectionHeading from '../components/SectionHeading';
-import { skillIcon, techIcon } from '../components/SocialIcon';
-import { skills, techMarquee } from '../data/personal';
-import useInView from '../hooks/useInView';
+import Section from '../components/Section';
+import Reveal from '../components/Reveal';
+import Icon from '../components/Icon';
+import { skills, SKILL_LEVELS } from '../data/personal';
+
+function LevelDots({ level }) {
+  return (
+    <span className="flex items-center gap-1.5" aria-hidden="true">
+      {[1, 2, 3].map((n) => (
+        <span key={n} className="h-1.5 w-4 overflow-hidden rounded-full bg-slate-800">
+          {n <= level && (
+            <span
+              className="lvl block h-full w-full rounded-full bg-blue-500 shadow-[0_0_6px_rgba(59,130,246,0.5)]"
+              style={{ '--i': n }}
+            />
+          )}
+        </span>
+      ))}
+    </span>
+  );
+}
 
 export default function Skills() {
-  const { ref, inView } = useInView();
-
   return (
-    <section id="skills" className="relative z-10 py-24">
-      <div className="container-x">
-        <SectionHeading
-          kicker="Tech Stack"
-          title="Tools & technologies I work with"
-          description="A blend of frontend craft, full-stack exposure and production tooling."
-        />
-
-        {/* Marquee */}
-        <div className="relative mb-14 overflow-hidden rounded-2xl border border-white/10 bg-transparent py-4 [mask-image:linear-gradient(90deg,transparent,black_12%,black_88%,transparent)]">
-          <div className="animate-marquee flex w-max gap-10">
-            {[...techMarquee, ...techMarquee].map((tech, i) => (
-              <span
-                key={`${tech}-${i}`}
-                className="flex shrink-0 items-center gap-2 font-mono text-sm text-slate-400"
-              >
-                <span className="h-1.5 w-1.5 rounded-full bg-gradient-to-r from-primary to-secondary" />
-                {tech}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Skill groups */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {skills.map((group, gi) => (
-            <motion.div
-              key={group.title}
-              ref={gi === 0 ? ref : undefined}
-              initial={{ opacity: 0, y: 30 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.55, delay: gi * 0.12 }}
-              className="glass glass-hover flex flex-col rounded-3xl p-6 sm:p-7"
-            >
-              <div className="mb-6 flex items-center gap-3">
-                <span className="grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br from-primary to-secondary text-white shadow-glow">
-                  {skillIcon(group.icon)}
-                </span>
-                <h3 className="text-lg font-bold text-white">{group.title}</h3>
-              </div>
-
-              <div className="space-y-4">
-                {group.items.map((item) => (
-                  <div key={item.name}>
-                    <div className="mb-1.5 flex items-center justify-between text-sm">
-                      <span className="text-slate-300">{item.name}</span>
-                      <span className="font-mono text-xs text-secondary">{item.level}%</span>
-                    </div>
-                    <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={inView ? { width: `${item.level}%` } : {}}
-                        transition={{ duration: 1, delay: 0.3 + gi * 0.15 }}
-                        className="h-full rounded-full bg-gradient-to-r from-primary via-secondary to-accent"
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Mini badges */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ delay: 0.5 }}
-          className="mt-10 flex flex-wrap items-center justify-center gap-3"
-        >
-          {[
-            { icon: 'ui', label: 'Responsive Design' },
-            { icon: 'api', label: 'REST API Integration' },
-            { icon: 'node', label: 'Auth: JWT + OAuth' },
-            { icon: 'node', label: 'Git Workflows' },
-          ].map((b) => (
-            <span
-              key={b.label}
-              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 font-mono text-xs text-slate-300"
-            >
-              {techIcon(b.icon, 15)}
-              {b.label}
-            </span>
-          ))}
-        </motion.div>
+    <Section
+      id="skills"
+      kicker="Skills"
+      title="Tools I use to ship"
+      description="Grouped by where they sit in the stack. Levels reflect day-to-day engineering use, not a self-rated percentage."
+      className="bg-navy-900/40"
+    >
+      <div className="lvl-static mb-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-slate-400" aria-hidden="true">
+        {[3, 2, 1].map((lvl) => (
+          <span key={lvl} className="inline-flex items-center gap-2">
+            <LevelDots level={lvl} />
+            <span className="font-medium">{SKILL_LEVELS[lvl]}</span>
+          </span>
+        ))}
       </div>
-    </section>
+
+      <div className="grid gap-5 md:grid-cols-2">
+        {skills.map((group, i) => (
+          <Reveal key={group.title} delay={i * 80} className="card p-6 sm:p-7 border-line/20 bg-surface/90">
+            <div className="flex items-center gap-3">
+              <span className="grid h-11 w-11 place-items-center rounded-xl bg-blue-500/10 text-blue-400 ring-1 ring-blue-500/20">
+                <Icon name={group.icon} className="h-5 w-5" />
+              </span>
+              <h3 className="text-lg font-bold text-white tracking-tight">{group.title}</h3>
+            </div>
+            <ul className="mt-5 divide-y divide-line/15">
+              {group.items.map((skill) => (
+                <li key={skill.name} className="flex items-center justify-between gap-4 py-3">
+                  <span className="flex items-center gap-3 text-sm font-medium text-slate-200">
+                    <span className="grid h-6 w-6 place-items-center text-slate-400">
+                      {skill.icon ? (
+                        <Icon name={skill.icon} className="h-4 w-4" />
+                      ) : (
+                        <span className="h-1.5 w-1.5 rounded-full bg-blue-400" />
+                      )}
+                    </span>
+                    {skill.name}
+                  </span>
+                  <span className="flex items-center gap-3">
+                    <span className="hidden text-xs text-slate-400 xs:inline font-mono">{SKILL_LEVELS[skill.level]}</span>
+                    <span className="sr-only xs:hidden">{SKILL_LEVELS[skill.level]}</span>
+                    <LevelDots level={skill.level} />
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        ))}
+      </div>
+    </Section>
   );
 }

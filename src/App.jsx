@@ -1,42 +1,41 @@
 import Navbar from './components/Navbar';
-import ParticlesBackground from './components/ParticlesBackground';
 import BackToTop from './components/BackToTop';
+import AnimatedBackground from './components/AnimatedBackground';
+import useSpotlight from './hooks/useSpotlight';
+import useSectionRouting from './hooks/useSectionRouting';
 import Hero from './sections/Hero';
 import About from './sections/About';
 import Skills from './sections/Skills';
 import Experience from './sections/Experience';
 import Projects from './sections/Projects';
+import Services from './sections/Services';
 import Education from './sections/Education';
-import Certifications from './sections/Certifications';
 import Contact from './sections/Contact';
 
 export default function App() {
+  useSpotlight();
+  useSectionRouting();
   return (
-    <div className="relative min-h-screen overflow-x-hidden">
-      {/* Global backgrounds */}
-      <div className="bg-grid pointer-events-none fixed inset-0 z-0" />
-      <ParticlesBackground />
-      <div
-        className="blob pointer-events-none fixed -top-32 left-1/4 z-0 h-[480px] w-[480px] opacity-20"
-        style={{ background: 'radial-gradient(circle, rgba(109,93,252,0.8), transparent 70%)' }}
-      />
-
-      {/* Content */}
-      <div className="relative z-10">
-        <Navbar />
-        <main>
-          <Hero />
-          <About />
-          <Skills />
-          <Experience />
-          <Projects />
-          <Education />
-          <Certifications />
-          <Contact />
-        </main>
-      </div>
-
+    <>
+      <AnimatedBackground />
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-fg focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-bg"
+      >
+        Skip to content
+      </a>
+      <Navbar />
+      <main id="main" tabIndex={-1} className="relative z-10 outline-none">
+        <Hero />
+        <About />
+        <Skills />
+        <Experience />
+        <Projects />
+        <Services />
+        <Education />
+        <Contact />
+      </main>
       <BackToTop />
-    </div>
+    </>
   );
 }

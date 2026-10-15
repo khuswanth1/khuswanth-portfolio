@@ -1,78 +1,85 @@
-import { motion } from 'framer-motion';
-import { Verified, AutoAwesome } from '@mui/icons-material';
-import SectionHeading from '../components/SectionHeading';
-import { about } from '../data/personal';
-import useInView from '../hooks/useInView';
+import { LuTarget } from 'react-icons/lu';
+import Section from '../components/Section';
+import Reveal from '../components/Reveal';
+import CountUp from '../components/CountUp';
+import Icon from '../components/Icon';
+import { about, projects, personal, achievements } from '../data/personal';
+
+// Derived so the numbers never go stale.
+const monthsWorked = Math.max(
+  0,
+  Math.floor((Date.now() - new Date(personal.careerStart).getTime()) / (30.44 * 24 * 3600 * 1000))
+);
+const years = `${Math.floor((monthsWorked / 12) * 2) / 2}+`;
+
+const facts = about.facts.map((f) => {
+  if (f.label === 'Projects shown here') return { ...f, value: String(projects.length) };
+  if (f.value === '__YEARS__') return { ...f, value: years };
+  return f;
+});
 
 export default function About() {
-  const { ref, inView } = useInView();
-
   return (
-    <section id="about" className="relative z-10 py-24">
-      <div className="container-x">
-        <SectionHeading
-          kicker="About Me"
-          title="Turning ideas into interactive experiences"
-          description="A quick look at who I am, what drives me and what I bring to the table."
-        />
-
-        <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-          {/* ── Left: summary card ── */}
-          <motion.div
-            ref={ref}
-            initial={{ opacity: 0, x: -30 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6 }}
-            className="glass glass-hover rounded-3xl p-8"
-          >
-            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-secondary text-white shadow-glow">
-              <AutoAwesome />
-            </div>
-            <h3 className="text-lg font-bold text-white">Who I am</h3>
-            <p className="mt-4 whitespace-pre-line text-sm leading-relaxed text-slate-400">
-              {about.summary}
-            </p>
-          </motion.div>
-
-          {/* ── Right: highlights + stats ── */}
-          <div>
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={inView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="glass glass-hover rounded-3xl p-8"
-            >
-              <h3 className="text-lg font-bold text-white">Highlights</h3>
-              <ul className="mt-4 space-y-3">
-                {about.highlights.map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-sm text-slate-300">
-                    <Verified className="mt-0.5 shrink-0 text-emerald-400" fontSize="small" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-
-            {/* Stats */}
-            <div className="mt-6 grid grid-cols-2 gap-4">
-              {about.stats.map((stat, i) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={inView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.5, delay: 0.15 + i * 0.1 }}
-                  className="gradient-border rounded-2xl p-5 text-center"
-                >
-                  <p className="text-gradient text-3xl font-extrabold">{stat.value}</p>
-                  <p className="mt-1 font-mono text-[11px] leading-snug text-slate-400">
-                    {stat.label}
-                  </p>
-                </motion.div>
-              ))}
+    <Section id="about" kicker="About me" title="Front-end focused, full-stack aware">
+      <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:gap-14">
+        <Reveal className="space-y-5 text-base leading-relaxed text-slate-300 sm:text-lg">
+          {about.summary.map((p) => (
+            <p key={p.slice(0, 24)}>{p}</p>
+          ))}
+          <div className="card mt-8 flex gap-4 p-5 sm:p-6 border-blue-500/20 bg-blue-950/20">
+            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-blue-500/15 text-blue-400 ring-1 ring-blue-500/30">
+              <LuTarget className="h-5 w-5" aria-hidden="true" />
+            </span>
+            <div>
+              <h3 className="font-display text-base font-semibold text-white">What I&apos;m looking for</h3>
+              <p className="mt-1 text-sm leading-relaxed text-slate-300 sm:text-base">{about.goals}</p>
             </div>
           </div>
-        </div>
+        </Reveal>
+
+        <Reveal delay={100}>
+          <dl className="grid grid-cols-2 gap-3.5 sm:gap-4">
+            {facts.map((f) => (
+              <div key={f.label} className="card p-5 sm:p-6 bg-surface/90 border-line/25">
+                <dt className="text-xs font-medium text-slate-400">{f.label}</dt>
+                <dd className="mt-2 font-display text-3xl font-extrabold text-white tracking-tight sm:text-4xl">
+                  <span className="text-gradient">
+                    <CountUp value={f.value} />
+                  </span>
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </Reveal>
       </div>
-    </section>
+
+      <h3 className="sr-only">Strengths</h3>
+      <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {about.strengths.map((s, i) => (
+          <Reveal as="li" key={s.title} delay={i * 70} className="card card-hover p-6 border-line/25 bg-surface/85">
+            <span className="inline-block rounded-md bg-blue-500/10 px-2 py-0.5 font-mono text-xs font-semibold text-blue-400">
+              0{i + 1}
+            </span>
+            <h4 className="mt-3 font-display text-lg font-semibold text-white">{s.title}</h4>
+            <p className="mt-2 text-sm leading-relaxed text-slate-400">{s.text}</p>
+          </Reveal>
+        ))}
+      </ul>
+
+      <h3 className="mt-10 font-display text-xl font-bold text-white">Highlights</h3>
+      <ul className="mt-5 grid gap-4 sm:grid-cols-2">
+        {achievements.map((a, i) => (
+          <Reveal as="li" key={a.title} delay={i * 70} className="card card-hover flex gap-4 p-5 border-line/25 bg-surface/85">
+            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-blue-500/15 text-blue-400 ring-1 ring-blue-500/30">
+              <Icon name={a.icon} className="h-5 w-5" />
+            </span>
+            <div>
+              <h4 className="font-display text-base font-semibold text-white">{a.title}</h4>
+              <p className="mt-1 text-sm leading-relaxed text-slate-400">{a.text}</p>
+            </div>
+          </Reveal>
+        ))}
+      </ul>
+    </Section>
   );
 }

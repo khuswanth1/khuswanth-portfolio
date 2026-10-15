@@ -1,95 +1,152 @@
-import profileImg from '../Assets/KhuswanthRao.jpeg';
-import resumePdf from '../Assets/Jadav Khuswanth Rao.pdf';
+/**
+ * All portfolio content lives here — edit this one file to update the site.
+ *
+ * Sources: the resume in /public and the public repositories on github.com/khuswanth1.
+ * Keep it factual: every project links to code you can show, every claim is something
+ * you can talk through in an interview.
+ */
+import profile480 from '../Assets/img/profile-480.webp';
+import profile800 from '../Assets/img/profile-800.webp';
+import profileJpg from '../Assets/img/profile-480.jpg';
+
+export const SITE_URL = 'https://portfolio-ten-liard-91.vercel.app';
 
 export const personal = {
   name: 'Khuswanth Rao Jadav',
-  firstName: 'Khuswanth Rao',
+  shortName: 'Khuswanth',
   role: 'Frontend / React Developer',
-  tagline: 'I craft fast, accessible and delightful web experiences.',
-  location: 'Hyderabad, Telangana, India',
+  headline: 'Frontend Engineer building responsive, API-driven web apps',
+  intro:
+    'I build the part of the product people actually touch: fast, responsive React interfaces that hold up in production. I also work comfortably across the API boundary with Java, Spring Boot and SQL.',
+  location: 'Hyderabad, India',
   email: 'khuswanthraojadav@gmail.com',
-  phone: '+91 7671085912', // TODO: replace with your phone number
-  avatar: profileImg,
-  resumeUrl: resumePdf,
-  socials: [
-    {
-      label: 'GitHub',
-      url: 'https://github.com/khuswanth1', // TODO: replace
-      icon: 'github',
-    },
-    {
-      label: 'LinkedIn',
-      url: 'https://www.linkedin.com/in/khuswanth-rao-jadav/', // TODO: replace
-      icon: 'linkedin',
-    },
-    {
-      label: 'Email',
-      url: 'mailto:khuswanthraojadav@gmail.com',
-      icon: 'mail',
-    },
-  ],
-  availability: 'Open to Frontend / React Developer roles',
+  phone: '+91 7671085912',
+  avatar: {
+    src: profile800,
+    srcSet: `${profile480} 480w, ${profile800} 800w`,
+    fallback: profileJpg,
+    width: 800,
+    height: 1067,
+  },
+  resumeUrl: `${import.meta.env.BASE_URL}Khuswanth-Rao-Jadav-Resume.pdf`,
+  resumeFileName: 'Khuswanth-Rao-Jadav-Resume.pdf',
+  github: 'https://github.com/khuswanth1',
+  githubUser: 'khuswanth1',
+  linkedin: 'https://www.linkedin.com/in/khuswanth-rao-jadav/',
+  availability: 'Open to Frontend, React & Full-Stack roles',
+  coreStack: ['React.js', 'TypeScript', 'JavaScript (ES6+)', 'Tailwind CSS', 'REST APIs', 'Spring Boot'],
+  careerStart: '2025-03-01',
 };
+
+export const socials = [
+  { label: 'GitHub', url: personal.github, icon: 'github', handle: 'github.com/khuswanth1' },
+  { label: 'LinkedIn', url: personal.linkedin, icon: 'linkedin', handle: 'in/khuswanth-rao-jadav' },
+  { label: 'Email', url: `mailto:${personal.email}`, icon: 'mail', handle: personal.email },
+];
 
 /* ── About ─────────────────────────────────────────────── */
 export const about = {
-  summary: `Frontend / React Developer based in Hyderabad with hands-on experience building
-production web applications at Levitica Technologies. I have a strong foundation in JavaScript,
-React, UI/UX and REST APIs, plus full-stack exposure through Java/Spring Boot and the MERN stack.
-
-I care about clean code, component architecture, performance and pixel-perfect responsive
-interfaces — and I bring designs to life with Tailwind CSS, Material UI and modern React patterns.`,
-  highlights: [
-    '1+ year of professional React development',
-    'Strong JavaScript fundamentals & UI/UX practice',
-    'Full-stack exposure — Node.js, Express, Java/Spring Boot, MySQL',
-    'Experienced with JWT, OAuth & Google authentication flows',
+  summary: [
+    'I am a frontend engineer at Levitica Technologies, where I ship React and TypeScript features from design handoff to production: authenticated dashboards, multi-step forms and data-heavy tables, all wired to REST APIs. I also track down performance problems such as unnecessary re-renders and slow initial loads.',
+    'I go deeper on the backend through my own projects, most recently a Spring Boot microservices system with six services, Spring Cloud Gateway, JWT and Google OAuth2 sign-in, and Razorpay payments, paired with a React frontend. An earlier internship at WaveMaker, building Java and Spring Boot modules with role-based access control, is why I design components with the API, the data and the edge cases in mind.',
   ],
-  stats: [
-    { value: '2+', label: 'Years of hands-on build experience' },
-    { value: '5+', label: 'Professional projects shipped' },
-    { value: '3', label: 'Internships across frontend & full-stack' },
+  goals:
+    'I am looking for a Frontend or Full-Stack role in Hyderabad, Bengaluru or Chennai (open to remote), where I can own real features end to end and keep raising the bar on UI quality and performance.',
+  strengths: [
+    {
+      title: 'Component architecture',
+      text: 'Reusable UI libraries, design tokens and predictable state with Redux Toolkit, Context API and Zustand.',
+    },
+    {
+      title: 'Performance-minded',
+      text: 'Route-level code splitting, asset preloading and memoization to keep Core Web Vitals healthy.',
+    },
+    {
+      title: 'API integration',
+      text: 'REST and FastAPI integration with authentication, error states and loading states handled properly.',
+    },
+    {
+      title: 'Team delivery',
+      text: 'Agile/Scrum ceremonies, peer code reviews in Git, and close work with designers, backend and QA.',
+    },
+  ],
+  facts: [
+    { value: '__YEARS__', label: 'Professional experience' },
+    { value: '4', label: 'Internships' },
+    { value: '9', label: 'Projects shown here' },
     { value: '8.31', label: 'B.Tech CGPA' },
   ],
 };
 
-/* ── Skills ────────────────────────────────────────────── */
+/* Achievements: only facts stated in the resume, LinkedIn profile or project descriptions. */
+export const achievements = [
+  { icon: 'react', title: 'Converted to full-time', text: 'Moved from Software Engineer Intern to Associate Software Engineer at Levitica Technologies.' },
+  { icon: 'tools', title: '10 certifications', text: 'Including Azure AI Fundamentals, HackerRank Frontend Developer and Cisco CCNA: Introduction to Networks.' },
+];
+
+/* ── Skills ──────────────────────────────────────────────
+ * level: 3 = Advanced (daily use), 2 = Proficient (shipped with it), 1 = Familiar
+ */
+export const SKILL_LEVELS = { 3: 'Advanced', 2: 'Proficient', 1: 'Familiar' };
+
 export const skills = [
   {
     title: 'Frontend',
-    icon: 'code',
+    icon: 'layout',
     items: [
-      { name: 'JavaScript (ES6+)', level: 92 },
-      { name: 'React.js', level: 90 },
-      { name: 'Redux Toolkit', level: 80 },
-      { name: 'Material UI', level: 88 },
-      { name: 'Tailwind CSS', level: 90 },
-      { name: 'HTML5 & CSS3', level: 95 }
+      { name: 'React.js', level: 3, icon: 'react' },
+      { name: 'JavaScript (ES6+)', level: 3, icon: 'js' },
+      { name: 'HTML5 & CSS3', level: 3, icon: 'html' },
+      { name: 'Tailwind CSS', level: 3, icon: 'tailwind' },
+      { name: 'Responsive Design', level: 3 },
+      { name: 'TypeScript', level: 2, icon: 'ts' },
+      { name: 'Next.js', level: 2, icon: 'next' },
+      { name: 'Material UI', level: 2, icon: 'mui' },
+      { name: 'Bootstrap', level: 2, icon: 'bootstrap' },
     ],
   },
   {
-    title: 'Backend & APIs',
+    title: 'State & APIs',
+    icon: 'api',
+    items: [
+      { name: 'REST APIs', level: 3 },
+      { name: 'Redux Toolkit', level: 2, icon: 'redux' },
+      { name: 'Context API', level: 3 },
+      { name: 'Zustand', level: 2 },
+      { name: 'TanStack Query', level: 1 },
+      { name: 'Axios / Fetch', level: 3 },
+      { name: 'FastAPI integration', level: 2, icon: 'fastapi' },
+      { name: 'Firebase', level: 2, icon: 'firebase' },
+    ],
+  },
+  {
+    title: 'Backend & Databases',
     icon: 'server',
     items: [
-      { name: 'Node.js & Express.js', level: 82 },
-      {name:'python',level:75},
-      {name:'FastAPI',level:70},
-      {name:'Django',level:60},
-      { name: 'Java & Spring Boot', level: 76 },
-      { name: 'REST APIs', level: 88 },
-      { name: 'JWT / OAuth / Google Auth', level: 82 },
-      { name: 'JSP / Servlets', level: 72 },
-      { name: 'Webhooks', level: 72 },
+      { name: 'Java', level: 2, icon: 'java' },
+      { name: 'Spring Boot', level: 2, icon: 'spring' },
+      { name: 'Spring Security', level: 2 },
+      { name: 'MySQL', level: 2, icon: 'mysql' },
+      { name: 'PostgreSQL', level: 2 },
+      { name: 'OAuth2 / JWT', level: 2 },
+      { name: 'Hibernate / JDBC', level: 1 },
+      { name: 'Servlets & JSP', level: 1 },
+      { name: 'Node.js & Express', level: 1, icon: 'node' },
+      { name: 'Python & Django', level: 1, icon: 'python' },
     ],
   },
   {
-    title: 'Database & Tools',
-    icon: 'database',
+    title: 'Tools & Practices',
+    icon: 'tools',
     items: [
-      { name: 'MySQL', level: 80 },
-      { name: 'Git / GitHub', level: 88 },
-      { name: 'OpenAI', level: 78 },
-      { name: 'Figma / UI Design', level: 80 },
+      { name: 'Git & GitHub', level: 3, icon: 'git' },
+      { name: 'Chrome DevTools', level: 3 },
+      { name: 'Postman', level: 2, icon: 'postman' },
+      { name: 'Jest / Vitest', level: 2, icon: 'vitest' },
+      { name: 'Docker', level: 1, icon: 'docker' },
+      { name: 'Figma', level: 2, icon: 'figma' },
+      { name: 'Agile / Scrum', level: 3 },
+      { name: 'Linux', level: 1, icon: 'linux' },
     ],
   },
 ];
@@ -97,305 +154,322 @@ export const skills = [
 /* ── Experience ────────────────────────────────────────── */
 export const experience = [
   {
-    id: 1,
-    role: "Associate Software Engineer",
-    company: "Levitica Technologies Pvt Ltd",
-    period: "Mar 2025 – Present",
-    current: true,
-    type: "Professional",
-    color: "#ffe600",
-    description: "Spearheading the engineering of high-performance frontend architectures and cross-platform mobile solutions using React.js and React Native. Promoted from Frontend Engineering Intern to Associate Software Engineer, designing pixel-perfect user interfaces with Tailwind CSS, developing responsive components, and leveraging AI dev tools (ChatGPT, GitHub Copilot) to accelerate delivery cycles.",
-    technologies: ["React.js", "React Native", "Tailwind CSS", "JavaScript (ES6+)", "HTML5/CSS3", "UI/UX Design", "Figma", "AI Dev Tools"],
+    id: 'levitica',
+    role: 'Associate Software Engineer',
+    company: 'Levitica Technologies Pvt Ltd',
+    location: 'Hyderabad, India',
+    period: 'Jul 2025 – Present',
+    type: 'Full-time',
+    summary:
+      'Frontend engineer on production web applications, focused on React feature development, API integration and UI performance.',
     points: [
-      "Engineering responsive web & mobile UI using React.js, React Native, and Tailwind CSS.",
-      "Designing intuitive UI/UX wireframes, prototypes, and accessible modern interfaces.",
-      "Leveraging AI dev tools (ChatGPT / Copilot) to streamline code quality & accelerate delivery.",
-      "Leading frontend architecture transitions, performance optimization, and cross-browser compatibility."
-    ]
+      'Built and shipped React.js and TypeScript features from design handoff to production, integrating REST and FastAPI endpoints with proper loading, empty and error states.',
+      'Developed reusable components, dashboards, multi-step forms and data tables with sorting, filtering and pagination.',
+      'Reduced unnecessary re-renders and initial load time on key screens using route-level code splitting, asset preloading and memoization.',
+      'Resolved production defects across the React frontend and API layer in an Agile team, with daily stand-ups, sprint reviews and Git-based peer code reviews.',
+    ],
+    tech: ['React.js', 'TypeScript', 'Tailwind CSS', 'FastAPI', 'REST APIs', 'Git', 'Figma'],
   },
   {
-    id: 2,
-    role: "Internship",
-    company: "Wavemaker",
-    period: "Jul 2024 – Sep 2024",
-    type: "Internship",
-    color: "#00d4ff",
-    description: "Engineered scalable enterprise solutions using the Wavemaker low-code ecosystem integrated with custom Java backend services. Orchestrated the full-cycle development of RESTful web services and optimized relational database schemas. Collaborated within an Agile Scrum framework to deliver robust modules, ensuring high code quality through rigorous peer reviews and automated testing.",
-    technologies: ["Java EE", "Spring Boot", "RESTful Architecture", "Agile/Scrum", "Low-Code DevOps", "MySQL"],
+    id: 'levitica-intern',
+    role: 'Software Engineer Intern',
+    company: 'Levitica Technologies Pvt Ltd',
+    location: 'Hyderabad, India',
+    period: 'Mar 2025 – Jun 2025',
+    type: 'Internship, converted to full-time',
+    summary: 'Started as an intern and was converted to a full-time Associate Software Engineer.',
     points: [
-      "Developing scalable Java backend system services.",
-      "Architecting efficient RESTful web based services.",
-      "Optimizing relational database technical data schemas.",
-      "Collaborating within Agile Scrum framework daily."
-    ]
+      'Built responsive React.js UI components from design specifications.',
+      'Integrated REST API endpoints into frontend views.',
+    ],
+    tech: ['React.js', 'JavaScript', 'REST APIs', 'Tailwind CSS'],
   },
   {
-    id: 3,
-    role: "Internship",
-    company: "Lets Grow More",
-    period: "Nov 2022 – Dec 2022",
-    type: "Internship",
-    color: "#ff00f7",
-    description: "Conceptualized and deployed modern web interfaces with a primary focus on user-centric design and cross-browser compatibility. Leveraged foundational web technologies to create performant, responsive applications, significantly improving UI accessibility and interaction flow for enhanced end-user engagement.",
-    technologies: ["JavaScript ES6", "HTML5 Specialist", "CSS3 Grid/Flex", "Responsive Design", "UI Frameworks"],
+    id: 'wavemaker',
+    role: 'Full Stack Java Intern',
+    company: 'WaveMaker',
+    location: 'Hyderabad, India',
+    period: 'Jul 2024 – Sep 2024',
+    type: 'Internship',
+    summary: 'Full-stack development across enterprise portal front ends and Java / Spring Boot REST services.',
     points: [
-      "Deploying modern cross-browser compatible interfaces.",
-      "Creating performant responsive web based applications.",
-      "Improving UI accessibility and interaction flow.",
-      "Implementing user-centric frontend design schemes."
-    ]
+      'Built full-stack enterprise modules with Java, Spring Boot, Hibernate, MySQL and REST APIs.',
+      'Implemented role-based access control with OAuth2/JWT authentication.',
+      'Designed relational schemas and optimised SQL queries to improve performance.',
+      'Developed modular front-end views with JavaScript (ES6+), HTML5, CSS3 and Bootstrap, and diagnosed cross-browser defects in Chrome DevTools.',
+    ],
+    tech: ['Java', 'Spring Boot', 'Hibernate', 'MySQL', 'JavaScript', 'OAuth2/JWT'],
   },
   {
-    id: 4,
-    role: "Internship",
-    company: "Oasis Infobyte",
-    period: "Sep 2022 – Oct 2022",
-    type: "Internship",
-    color: "#7b2fff",
-    description: "Advanced core technical competencies through the implementation of complex algorithmic solutions and robust backend logic. Applied Object-Oriented Programming (OOP) principles to develop scalable Java applications, focusing on data structure optimization and the elimination of computational bottlenecks in real-world logic scenarios.",
-    technologies: ["Core Java", "OOP Principles", "DSA Optimization", "Logic Engineering", "Backend Testing"],
+    id: 'lgm',
+    role: 'Web Development Intern',
+    company: 'LetsGrowMore',
+    location: 'Remote',
+    period: 'Nov 2022 – Dec 2022',
+    type: 'Internship',
+    summary: 'Virtual internship focused on core web fundamentals.',
     points: [
-      "Implementing complex algorithmic Java solutions locally.",
-      "Applying OOP principles for scalable application logic.",
-      "Optimizing data structures to eliminate bottlenecks.",
-      "Engineering robust backend logic for real scenarios."
-    ]
-  }
+      'Built responsive, cross-browser web interfaces with HTML5, CSS3, JavaScript (ES6+) and Bootstrap, using reusable components.',
+      'Completed four published tasks: a to-do list app, a React app, a live-preview registration form and a calculator.',
+    ],
+    tech: ['HTML5', 'CSS3', 'JavaScript', 'React.js'],
+  },
+  {
+    id: 'oasis',
+    role: 'Java Development Intern',
+    company: 'Oasis Infobyte',
+    location: 'Remote',
+    period: 'Sep 2022 – Oct 2022',
+    type: 'Internship',
+    summary: 'Virtual internship focused on Java and object-oriented design.',
+    points: [
+      'Developed Java applications using Core Java, OOP and data structures, including an ATM interface and a number-guessing game.',
+      'Focused on exception handling, debugging and clean code.',
+    ],
+    tech: ['Java', 'OOP', 'Collections'],
+  },
 ];
 
 /* ── Education ─────────────────────────────────────────── */
 export const education = [
   {
-    id: 1,
-    degree: "Bachelor of Technology",
-    field: "Computer Science and Engineering",
-    institution: "Sri Venkateswara College of Engineering",
-    location: "Tirupati",
-    period: "2020 – 2024",
-    cgpa: "8.31",
-    score: "CGPA: 8.31",
-    icon: "School"
+    id: 'btech',
+    degree: 'Bachelor of Technology (B.Tech)',
+    field: 'Computer Engineering',
+    institution: 'Sri Venkateswara College of Engineering',
+    location: 'Tirupati',
+    period: '2020 – 2024',
+    score: 'CGPA 8.31 / 10',
   },
   {
-    id: 2,
-    degree: "Board of Intermediate Education",
-    field: "MPC (Math, Physics, Chemistry)",
-    institution: "Sri Chaitanya Junior College",
-    location: "Tirupati",
-    period: "2018 – 2020",
-    cgpa: "6.21",
-    score: "CGPA: 6.21",
-    icon: "AutoStories"
+    id: 'inter',
+    degree: 'Intermediate (MPC)',
+    field: 'Mathematics, Physics, Chemistry',
+    institution: 'Sri Chaitanya Junior College',
+    location: 'Tirupati',
+    period: '2018 – 2020',
+    score: 'CGPA 6.21',
   },
   {
-    id: 3,
-    degree: "Board of Secondary School Education",
-    field: "SSC",
-    institution: "Prashanth English Medium High School",
-    location: "Tirupati",
-    period: "2018",
-    cgpa: "8.5",
-    score: "CGPA: 8.5",
-    icon: "AccountBalance"
-  }
-];
-
-/* ── Projects ──────────────────────────────────────────── */
-export const projects = [
-  {
-    id: 1,
-    title: "PharmaCare E-Commerce Platform",
-    subtitle: "React.js • Spring Boot Microservices • JWT • Cloud Architecture",
-    description: "A production-grade full-stack pharmacy e-commerce platform built with React.js and a Spring Boot microservices backend. Features independent authentication, catalog, shopping cart, order, and payment processing services.",
-    techStack: ["React.js", "Spring Boot", "Microservices", "Spring Security", "JWT", "RESTful APIs", "Hibernate", "MySQL", "Tailwind CSS"],
-    tech: ["React.js", "Spring Boot", "Microservices", "JWT", "MySQL", "Tailwind CSS"],
-    features: [
-      "Architected scalable microservices backend with isolated Auth, Product, Cart, Order, and Payment services",
-      "Designed and secured RESTful APIs with Spring Boot, Spring Data JPA, Hibernate, and JWT/OAuth2 authentication",
-      "Built dynamic shopping workflows including real-time product search, cart synchronization, and checkout",
-      "Engineered modular React.js components utilizing Context API for seamless global state management",
-      "Implemented enterprise API Gateway routing patterns and robust error-handling mechanisms"
-    ],
-    highlights: [
-      "Microservices Backend",
-      "JWT & Spring Security",
-      "Real-time Search & Cart",
-      "API Gateway Routing"
-    ],
-    gradient: "from-emerald-400 to-teal-600",
-    color: "#00ff88",
-    accent: "#00ff88",
-    github: "https://github.com/khuswanth1/Pharma-app",
-    links: { live: "#", code: "https://github.com/khuswanth1/Pharma-app" },
-    category: "Microservices Web App"
+    id: 'ssc',
+    degree: 'Secondary School Certificate (SSC)',
+    field: 'Board of Secondary Education',
+    institution: 'Prashanth English Medium High School',
+    location: 'Tirupati',
+    period: '2018',
+    score: 'CGPA 8.5',
   },
-  {
-    id: 2,
-    title: "TaskMaster - Productivity Suite",
-    subtitle: "React.js • Spring Boot • Material UI • Tailwind CSS • Docker",
-    description: "A full-stack productivity and task management suite engineered with React.js and Spring Boot. Delivers responsive task categorization, priority scheduling, and persistent database storage.",
-    techStack: ["React.js", "Java", "Spring Boot", "REST API", "Spring Data JPA", "Material UI", "Tailwind CSS", "Docker", "Maven"],
-    tech: ["React.js", "Spring Boot", "Material UI", "Tailwind CSS", "Docker"],
-    features: [
-      "Developed high-throughput RESTful backend endpoints with Spring Boot and JPA persistence",
-      "Created an intuitive, accessible React frontend with interactive task boards and filter states",
-      "Architected multi-layered application separation across UI, controller API, service, and repository layers",
-      "Configured Docker and Docker Compose environments for simplified containerized deployments"
-    ],
-    highlights: [
-      "Interactive Task Boards",
-      "Layered Architecture",
-      "Spring JPA Persistence",
-      "Docker Containerization"
-    ],
-    gradient: "from-cyan-400 to-blue-600",
-    color: "#00f2ff",
-    accent: "#00f2ff",
-    github: "https://github.com/khuswanth1/Todo",
-    links: { live: "#", code: "https://github.com/khuswanth1/Todo" },
-    category: "Full Stack Web App"
-  },
-  {
-    id: 3,
-    title: "ATM Banking Simulation System",
-    subtitle: "Java Core • Object-Oriented Architecture • Transaction Security",
-    description: "A robust banking simulation system that emulates real-time ATM transactions with secure PIN validation, deposit, withdrawal, account-to-account transfer, and transaction history tracking.",
-    techStack: ["Java", "OOP Design", "Data Structures", "Console UI", "Exception Handling"],
-    tech: ["Java", "OOP Design", "Data Structures", "Console UI"],
-    features: [
-      "Secure PIN-based authentication with session validation",
-      "Transactional safety for deposit, withdrawal, and fund transfers",
-      "Comprehensive transaction history logging and mini-statement generation",
-      "Robust exception handling and data boundary verification"
-    ],
-    highlights: [
-      "PIN Session Security",
-      "Transaction Safety",
-      "Mini-statement Log",
-      "Exception Handling"
-    ],
-    gradient: "from-purple-500 to-pink-600",
-    color: "#ff00f7",
-    accent: "#ff00f7",
-    github: "https://github.com/khuswanth1/ATM_Interface",
-    links: { live: "#", code: "https://github.com/khuswanth1/ATM_Interface" },
-    category: "Java Application"
-  },
-  {
-    id: 4,
-    title: "Trivia Seven - Interactive Quiz Engine",
-    subtitle: "Java • Multi-Category Engine • Two-Player Competitive Logic",
-    description: "An interactive two-player competitive quiz platform featuring seven knowledge categories, real-time score tracking, dynamic question randomization, and automated winner evaluation.",
-    techStack: ["Java", "Game Logic", "OOP", "Data Collections", "Console UI"],
-    tech: ["Java", "Game Logic", "OOP", "Collections"],
-    features: [
-      "Two-player competitive game mode with turn management",
-      "7 distinct knowledge domains and curated question banks",
-      "Dynamic question shuffling and real-time score accumulation",
-      "Automated winner evaluation and performance summary"
-    ],
-    highlights: [
-      "Two-Player Competitive",
-      "7 Knowledge Domains",
-      "Dynamic Question Bank",
-      "Score Accumulation"
-    ],
-    gradient: "from-amber-400 to-orange-600",
-    color: "#ffe600",
-    accent: "#ffe600",
-    github: "https://github.com/khuswanth1/triviaWithSeven",
-    links: { live: "#", code: "https://github.com/khuswanth1/triviaWithSeven" },
-    category: "Java Application"
-  }
 ];
 
 /* ── Certifications ────────────────────────────────────── */
 export const certifications = [
-  {
-    id: 1,
-    title: "Frontend Developer (React)",
-    issuer: "HackerRank",
-    year: "Jul 2026",
-    color: "#00f2ff",
-    category: "Frontend",
-  },
-  {
-    id: 2,
-    title: "React (Basic & Advanced)",
-    issuer: "HackerRank",
-    year: "Jul 2026",
-    color: "#00ff88",
-    category: "Frontend",
-  },
-  {
-    id: 3,
-    title: "Software Engineer Role Certification",
-    issuer: "HackerRank",
-    year: "Jul 2026",
-    color: "#ffe600",
-    category: "Engineering"
-  },
-  {
-    id: 4,
-    title: "JavaScript Specialist",
-    issuer: "Infosys Springboard",
-    year: "Jul 2026",
-    color: "#ff00f7",
-    category: "Frontend"
-  },
-  {
-    id: 5,
-    title: "Cloud Computing Architecture",
-    issuer: "NPTEL (IIT Kharagpur)",
-    year: "2023",
-    color: "#00d4ff",
-    category: "Cloud"
-  },
-  {
-    id: 6,
-    title: "Introduction to Machine Learning",
-    issuer: "Coursera & Kaggle",
-    year: "2023",
-    color: "#a855f7",
-    category: "AI/ML"
-  },
-  {
-    id: 7,
-    title: "Database Management Systems (DBMS)",
-    issuer: "NPTEL (IIT Madras)",
-    year: "2023",
-    color: "#ff6b35",
-    category: "Database"
-  },
-  {
-    id: 8,
-    title: "SQL & Relational Databases",
-    issuer: "SoloLearn",
-    year: "2022",
-    color: "#ffd700",
-    category: "Database"
-  },
-  {
-    id: 9,
-    title: "Full-Stack Web Development",
-    issuer: "Lets Grow More",
-    year: "2022",
-    color: "#00ff88",
-    category: "Web"
-  },
-  {
-    id: 10,
-    title: "Java Application Engineering",
-    issuer: "Oasis Infobyte",
-    year: "2022",
-    color: "#7b2fff",
-    category: "Programming"
-  }
+  { title: 'Azure AI Fundamentals (AI-900)', issuer: 'Microsoft', category: 'Cloud & AI' },
+  { title: 'Frontend Developer (React)', issuer: 'HackerRank', year: '2026', category: 'Frontend' },
+  { title: 'React (Basic & Advanced)', issuer: 'HackerRank', year: '2026', category: 'Frontend' },
+  { title: 'Software Engineer Role Certification', issuer: 'HackerRank', year: '2026', category: 'Engineering' },
+  { title: 'JavaScript (ES6+, DOM, Async JS)', issuer: 'Infosys Springboard', year: '2026', category: 'Frontend' },
+  { title: 'CCNA: Introduction to Networks', issuer: 'Cisco Networking Academy', category: 'Networking' },
+  { title: 'Cloud Computing', issuer: 'NPTEL (IIT Kharagpur)', year: '2023', category: 'Cloud & AI' },
+  { title: 'Database Management Systems', issuer: 'NPTEL (IIT Madras)', year: '2023', category: 'Databases' },
+  { title: 'Introduction to Machine Learning', issuer: 'Coursera & Kaggle', year: '2023', category: 'Cloud & AI' },
+  { title: 'SQL & Relational Databases', issuer: 'SoloLearn', year: '2022', category: 'Databases' },
 ];
 
-/* ── Technologies marquee ──────────────────────────────── */
-export const techMarquee = [
-  'JavaScript', 'React.js', 'Python', 'FastAPI', 'Django', 'Redux Toolkit', 'Material UI', 'Tailwind CSS',
-  'Node.js', 'Express.js', 'REST APIs', 'JWT', 'OAuth', 'MySQL', 'MongoDB',
-  'Java', 'Spring Boot', 'Git', 'GitHub', 'HTML5', 'CSS3', 'WaveMaker',
+/* ── Services ──────────────────────────────────────────── */
+export const services = [
+  {
+    icon: 'layout',
+    title: 'Frontend Development',
+    text: 'Pixel-accurate, responsive and accessible interfaces from a Figma file or a rough idea, in HTML, CSS, Tailwind and modern JavaScript.',
+    points: ['Responsive, mobile-first layouts', 'Accessibility and keyboard support', 'Core Web Vitals tuning'],
+  },
+  {
+    icon: 'react',
+    title: 'React Development',
+    text: 'Single-page apps and dashboards in React and TypeScript with clean component architecture and predictable state.',
+    points: ['Reusable component libraries', 'Redux Toolkit, Context or Zustand', 'Code splitting and lazy loading'],
+  },
+  {
+    icon: 'server',
+    title: 'Full-Stack Development',
+    text: 'React front ends connected to REST APIs, with the Java, Spring Boot and MySQL background to work across the stack.',
+    points: ['REST / FastAPI integration', 'JWT & OAuth2 authentication flows', 'Spring Boot + MySQL services'],
+  },
+];
+
+/* ── Projects ────────────────────────────────────────────
+ * category: 'web' | 'dashboard' | 'fullstack' | 'java' | 'python' (tabs with no projects are hidden)
+ * image: optional screenshot (import it at the top of this file) — a generated cover is used otherwise
+ */
+export const PROJECT_CATEGORIES = [
+  { id: 'all', label: 'All' },
+  { id: 'web', label: 'Web apps' },
+  { id: 'dashboard', label: 'Dashboards' },
+  { id: 'fullstack', label: 'Full stack' },
+  { id: 'java', label: 'Java' },
+  { id: 'python', label: 'Python' },
+];
+
+export const projects = [
+  {
+    slug: 'task-manager',
+    title: 'TaskMaster',
+    tagline: 'Task management PWA with push notifications and themes',
+    category: 'web',
+    featured: true,
+    accent: '#22d3ee',
+    icon: 'tasks',
+    description:
+      'A productivity app for creating, scheduling and tracking tasks, with Firebase-backed sign-in and storage, browser push notifications and a deeply customisable interface.',
+    features: [
+      'Create, prioritise and track tasks from a dashboard view',
+      'Desktop and web-push notifications for upcoming tasks',
+      'Multilingual UI with an i18n layer and multilingual input',
+      'Custom themes, Google Fonts picker, sound and calendar settings',
+      'Backup and restore settings, profile editing',
+      'Containerised with Docker; deployed on Vercel',
+    ],
+    tech: ['React.js', 'Vite', 'Material UI', 'Tailwind CSS', 'Firebase', 'Docker'],
+    github: 'https://github.com/khuswanth1/Task-Management-Application',
+    // live: 'https://todo-ashen-gamma-89.vercel.app',
+  },
+  {
+    slug: 'pharmacy-ecommerce',
+    title: 'PharmaCare',
+    tagline: 'Pharmacy e-commerce with prescriptions and live delivery tracking',
+    category: 'web',
+    featured: true,
+    accent: '#34d399',
+    icon: 'pharmacy',
+    description:
+      'A pharmacy shopping platform with medicine search, cart and checkout, prescription upload, and separate portals for admins, vendors and delivery partners.',
+    features: [
+      'Medicine catalogue with category pages, debounced search and voice search',
+      'Prescription upload with in-browser OCR (Tesseract.js) and webcam capture',
+      'Cart, wishlist, saved addresses with map-based location picker',
+      'Razorpay checkout flow with payment-failure handling',
+      'Order tracking with a live delivery map and ETA estimates',
+      'Admin, vendor and delivery-partner dashboards with role-based routing',
+    ],
+    tech: ['React.js', 'Redux Toolkit', 'Material UI', 'Tailwind CSS', 'Firebase', 'Google Maps', 'Razorpay'],
+    github: 'https://github.com/khuswanth1/Pharmacy-E-Commerce-Application',
+  },
+  {
+    slug: 'bookmyshow-clone',
+    title: 'BookMyShow Clone',
+    tagline: 'Movie and event ticketing with seat maps and QR check-in',
+    category: 'web',
+    featured: true,
+    accent: '#fb7185',
+    icon: 'ticket',
+    description:
+      'A ticketing and events marketplace: browse movies and events by city, pick seats, check out, and get a QR ticket that organisers scan at the venue.',
+    features: [
+      'City picker and map view of venues (Leaflet)',
+      'Interactive seat selection and checkout flow',
+      'QR-code tickets and a camera-based check-in scanner (jsQR)',
+      'Organizer, vendor, helpdesk and admin portals with role-based access',
+      'Server-state caching with TanStack Query',
+      'Docker + nginx production image; unit tests with Vitest',
+    ],
+    tech: ['React.js', 'React Router', 'TanStack Query', 'Tailwind CSS', 'Leaflet', 'Vitest', 'Docker'],
+    github: 'https://github.com/khuswanth1/bookmyshow',
+  },
+  {
+    slug: 'fintrack',
+    title: 'FinTrack',
+    tagline: 'Personal finance dashboard with budgets, goals and insights',
+    category: 'dashboard',
+    featured: true,
+    accent: '#a3e635',
+    icon: 'chart',
+    description:
+      'A personal finance dashboard for tracking transactions, budgets, savings goals and recurring payments, with charts, an insights page and an assistant chat.',
+    features: [
+      'Google sign-in with Firebase Authentication',
+      'Transactions, categories, budgets, goals and recurring payments',
+      'Interactive charts for trends and category breakdowns (Recharts)',
+      'Insights page and an in-app assistant chat',
+      'Real-time updates, light/dark theme and toast notifications',
+      'Tested with Vitest and Testing Library; Dockerised',
+    ],
+    tech: ['React.js', 'React Router', 'Recharts', 'Firebase', 'Tailwind CSS', 'Vitest'],
+    github: 'https://github.com/khuswanth1/fintrack',
+  },
+  {
+    slug: 'chatflow',
+    title: 'ChatFlow',
+    tagline: 'Real-time messaging front end with calls and stories',
+    category: 'web',
+    accent: '#60a5fa',
+    icon: 'chat',
+    description:
+      'The front end of a real-time messaging app with direct and group chats over WebSockets, call screens, 24-hour status stories and an AI chatbot.',
+    features: [
+      'Direct and group conversations over WebSockets',
+      'Deep-linkable routes for chats, status, calls and settings (React Router v7)',
+      '1:1 and group call interfaces (WebRTC)',
+      '24-hour disappearing status updates',
+      'Dark, light and system themes; mobile-first layout',
+      'Global state with Zustand',
+    ],
+    tech: ['React 19', 'React Router', 'Zustand', 'Tailwind CSS', 'WebSockets'],
+    github: 'https://github.com/khuswanth1/chatting-app',
+  },
+  {
+    slug: 'wavely',
+    title: 'Wavely',
+    tagline: 'Music streaming web app with a persistent player',
+    category: 'web',
+    accent: '#c084fc',
+    icon: 'music',
+    description:
+      'A music streaming interface with a persistent player and queue, playlists, search, charts and podcasts, plus an admin area for managing the catalogue.',
+    features: [
+      'Persistent player bar with queue panel and reducer-driven player state',
+      'Keyboard shortcuts for playback and navigation',
+      'Search, playlists, artists, charts, languages and podcast pages',
+      'Spotify account connection via OAuth callback',
+      'Admin dashboard for catalogue and source management',
+      'Linted with Oxlint, tested with Vitest; Docker + nginx image',
+    ],
+    tech: ['React.js', 'React Router', 'Tailwind CSS', 'Context API', 'Vitest', 'Docker'],
+    github: 'https://github.com/khuswanth1/music-player',
+  },
+  {
+    slug: 'atm-interface',
+    title: 'ATM Interface',
+    tagline: 'Console banking simulation in Core Java',
+    category: 'java',
+    accent: '#f472b6',
+    icon: 'bank',
+    description:
+      'A console ATM simulation with PIN authentication, deposits, withdrawals, transfers and a transaction history.',
+    features: [
+      'PIN-based login and session handling',
+      'Deposit, withdrawal and account-to-account transfer',
+      'Transaction history and mini statement',
+      'Input validation and exception handling',
+    ],
+    tech: ['Java', 'OOP', 'Collections'],
+    github: 'https://github.com/khuswanth1/ATM_Interface',
+  },
+  {
+    slug: 'trivia-seven',
+    title: 'Trivia Seven',
+    tagline: 'Two-player quiz game with seven categories',
+    category: 'java',
+    accent: '#facc15',
+    icon: 'quiz',
+    description:
+      'A two-player console quiz with seven knowledge categories, shuffled questions, live scoring and automatic winner evaluation.',
+    features: [
+      'Turn-based two-player mode',
+      'Seven categories with curated question banks',
+      'Question shuffling and running scores',
+      'Winner evaluation and summary',
+    ],
+    tech: ['Java', 'OOP', 'Collections'],
+    github: 'https://github.com/khuswanth1/triviaWithSeven',
+  },
 ];
