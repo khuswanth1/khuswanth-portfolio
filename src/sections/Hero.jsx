@@ -30,9 +30,6 @@ export default function Hero() {
   return (
     <section id="home" aria-labelledby="hero-title" className="relative overflow-hidden pb-12 pt-24 sm:pt-32 lg:pb-16">
       <div aria-hidden="true" className="bg-grid pointer-events-none absolute inset-0" />
-      <div aria-hidden="true" className="bg-glow pointer-events-none absolute inset-0" />
-      <div aria-hidden="true" className="orb orb-a" />
-      <div aria-hidden="true" className="orb orb-b" />
 
       <div className="hero-in container-x relative grid items-center gap-12 lg:grid-cols-[1.25fr_0.75fr] lg:gap-16">
         <div>
@@ -45,7 +42,7 @@ export default function Hero() {
           </p>
 
           <h1 id="hero-title" className="mt-6 whitespace-nowrap text-[1.65rem] font-extrabold leading-[1.1] text-white tracking-tight xs:text-3xl sm:text-4xl lg:text-5xl">
-            {personal.name.split(' ').slice(0, 2).join(' ')}{' '}
+            <span className="name-shine">{personal.name.split(' ').slice(0, 2).join(' ')}</span>{' '}
             <span className="text-slate-400 font-medium">{personal.name.split(' ').slice(2).join(' ')}</span>
           </h1>
 
@@ -118,7 +115,7 @@ export default function Hero() {
           onPointerMove={tiltMove}
           onPointerLeave={tiltLeave}
         >
-          <div className="absolute -inset-4 rounded-[36px] bg-gradient-to-tr from-blue-600/20 via-sky-500/15 to-transparent blur-2xl pointer-events-none" />
+          <div className="absolute -inset-4 rounded-[36px] bg-gradient-to-tr from-blue-600/20 to-transparent blur-2xl pointer-events-none" />
 
           <div className="relative overflow-hidden rounded-[28px] border border-line/30 bg-surface/90 p-2.5 shadow-2xl backdrop-blur-md">
             <picture>

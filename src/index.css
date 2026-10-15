@@ -135,8 +135,7 @@
 }
 
 .bg-glow {
-  background: radial-gradient(45% 45% at 20% 12%, rgb(var(--accent) / 0.18), transparent 70%),
-    radial-gradient(40% 40% at 85% 22%, rgb(var(--accent-2) / 0.14), transparent 70%);
+  background: radial-gradient(45% 45% at 20% 12%, rgb(var(--accent) / 0.18), transparent 70%);
 }
 
 /* ---------- Component micro-interactions ---------- */
@@ -283,6 +282,42 @@ li.reveal.is-visible .stagger-li {
   }
 }
 
+/* ---------- Extra component animations ---------- */
+.btn-accent,
+.btn-ghost,
+.btn-primary {
+  transition-property: color, background-color, border-color, box-shadow, transform, translate;
+}
+
+/* One-off light sweep across the hero name */
+.name-shine {
+  color: transparent;
+  background: linear-gradient(100deg, #fff 0 42%, #93c5fd 50%, #fff 58% 100%) 100% 0 / 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: name-shine 2.4s cubic-bezier(0.4, 0, 0.2, 1) 0.9s 1 both;
+}
+@keyframes name-shine {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0% 0;
+  }
+}
+
+/* List items that rise in, one after another, once their parent is revealed */
+.stagger-up {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.5s ease-out, transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition-delay: calc(var(--i, 0) * 70ms + 200ms);
+}
+.reveal.is-visible .stagger-up {
+  opacity: 1;
+  transform: none;
+}
+
 /* ---------- Hero extras ---------- */
 .caret {
   display: inline-block;
@@ -421,6 +456,15 @@ li.reveal.is-visible .stagger-li {
     transform: none;
   }
   .tilt {
+    transform: none;
+  }
+  .name-shine {
+    animation: none;
+    color: #fff;
+    background: none;
+  }
+  .stagger-up {
+    opacity: 1;
     transform: none;
   }
   .caret,

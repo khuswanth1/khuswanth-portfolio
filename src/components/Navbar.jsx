@@ -76,13 +76,23 @@ const SECTION_IDS = ['home', ...NAV_LINKS.map((l) => l.id)];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
   const active = useActiveSection(SECTION_IDS);
   const menuButtonRef = useRef(null);
   const menuRef = useRef(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 16);
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 16);
+      // Slide away when scrolling down, come back as soon as the visitor scrolls up.
+      if (Math.abs(y - lastY) > 6) {
+        setHidden(y > 240 && y > lastY);
+        lastY = y;
+      }
+    };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
@@ -115,7 +125,9 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,box-shadow] duration-300 ${
+      className={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,box-shadow,transform] duration-300 ${
+        hidden && !open ? '-translate-y-full' : 'translate-y-0'
+      } ${
         scrolled || open
           ? 'border-b border-line/20 bg-navy-900/90 shadow-lg shadow-black/40 backdrop-blur-xl'
           : 'border-b border-transparent bg-transparent'

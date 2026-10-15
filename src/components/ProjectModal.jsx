@@ -51,13 +51,13 @@ export default function ProjectModal({ project, onClose }) {
 
   return (
     <div className="fixed inset-0 z-[60] flex items-end justify-center sm:items-center sm:p-6">
-      <div aria-hidden="true" onClick={onClose} className="absolute inset-0 animate-fade-in bg-black/75 backdrop-blur-md" />
+      <div aria-hidden="true" onClick={onClose} className="absolute inset-0 animate-fade-in bg-black/50 backdrop-blur-sm" />
       <div
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="relative flex max-h-[92vh] w-full max-w-3xl animate-dialog-in flex-col overflow-hidden rounded-t-3xl border border-line/25 bg-surface/95 shadow-2xl sm:rounded-3xl"
+        className="relative flex max-h-[92vh] w-full max-w-3xl animate-dialog-in flex-col overflow-hidden rounded-t-3xl border border-white/10 bg-navy-900/50 shadow-2xl backdrop-blur-2xl backdrop-saturate-150 sm:rounded-3xl"
       >
         <div className="relative h-44 shrink-0 sm:h-56">
           <ProjectCover project={project} />

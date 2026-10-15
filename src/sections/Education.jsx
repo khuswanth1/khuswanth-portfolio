@@ -66,8 +66,8 @@ export default function Education() {
             </div>
           </div>
           <ul className="mt-6 divide-y divide-line/15">
-            {certifications.map((cert) => (
-              <li key={cert.title} className="flex items-start justify-between gap-4 py-3.5">
+            {certifications.map((cert, i) => (
+              <li key={cert.title} style={{ '--i': i }} className="stagger-up flex items-start justify-between gap-4 py-3.5">
                 <div>
                   <p className="text-sm font-semibold text-white">{cert.title}</p>
                   <p className="mt-0.5 text-xs text-slate-400">

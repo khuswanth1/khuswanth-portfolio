@@ -3,6 +3,7 @@ import BackToTop from './components/BackToTop';
 import AnimatedBackground from './components/AnimatedBackground';
 import useSpotlight from './hooks/useSpotlight';
 import useSectionRouting from './hooks/useSectionRouting';
+import useMagnetic from './hooks/useMagnetic';
 import Hero from './sections/Hero';
 import About from './sections/About';
 import Skills from './sections/Skills';
@@ -15,6 +16,7 @@ import Contact from './sections/Contact';
 export default function App() {
   useSpotlight();
   useSectionRouting();
+  useMagnetic();
   return (
     <>
       <AnimatedBackground />
