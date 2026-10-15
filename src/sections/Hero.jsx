@@ -1,218 +1,143 @@
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import {
-  Download,
-  Mail,
-  RocketLaunch,
-  LocationOn,
-  Phone,
-} from '@mui/icons-material';
-import { personal } from '../data/personal';
-import { socialIcon } from '../components/SocialIcon';
+import { LuArrowRight, LuDownload, LuMail, LuMapPin } from 'react-icons/lu';
+import { personal, socials, projects, certifications } from '../data/personal';
+import Icon from '../components/Icon';
+import TechMarquee from '../components/TechMarquee';
+import RoleTyper from '../components/RoleTyper';
+import CountUp from '../components/CountUp';
 
-const ROLES = [
-  'Frontend / React Developer',
-  'JavaScript Enthusiast',
-  'UI/UX-Focused Engineer',
-  'Python / Django Learner'
+const ROLES = ['Frontend Engineer', 'React Developer', 'Backend Developer'];
+
+const months = Math.floor((Date.now() - new Date(personal.careerStart).getTime()) / (30.44 * 24 * 3600 * 1000));
+const STATS = [
+  { value: `${Math.floor((months / 12) * 2) / 2}+`, label: 'Years of experience' },
+  { value: String(projects.length), label: 'Projects built' },
+  { value: String(certifications.length), label: 'Certifications' },
 ];
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
-  visible: (i = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.12, duration: 0.55, ease: 'easeOut' },
-  }),
+/** Cursor-driven 3D tilt for the portrait (fine pointers only, off for reduced motion). */
+const tiltMove = (e) => {
+  if (e.pointerType !== 'mouse' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const r = e.currentTarget.getBoundingClientRect();
+  e.currentTarget.style.setProperty('--ry', `${((e.clientX - r.left) / r.width - 0.5) * 10}deg`);
+  e.currentTarget.style.setProperty('--rx', `${(0.5 - (e.clientY - r.top) / r.height) * 10}deg`);
+};
+const tiltLeave = (e) => {
+  e.currentTarget.style.setProperty('--rx', '0deg');
+  e.currentTarget.style.setProperty('--ry', '0deg');
 };
 
 export default function Hero() {
-  const [roleIndex, setRoleIndex] = useState(0);
-  const [text, setText] = useState('');
-  const [deleting, setDeleting] = useState(false);
-
-  useEffect(() => {
-    const current = ROLES[roleIndex % ROLES.length];
-    let interval;
-
-    if (!deleting && text.length < current.length) {
-      interval = setTimeout(() => setText(current.slice(0, text.length + 1)), 70);
-    } else if (!deleting && text.length === current.length) {
-      interval = setTimeout(() => setDeleting(true), 1400);
-    } else if (deleting && text.length > 0) {
-      interval = setTimeout(() => setText(current.slice(0, text.length - 1)), 35);
-    } else {
-      setDeleting(false);
-      setRoleIndex((i) => i + 1);
-    }
-    return () => clearTimeout(interval);
-  }, [text, deleting, roleIndex]);
-
   return (
-    <section
-      id="home"
-      className="relative z-10 flex min-h-screen items-center overflow-hidden pt-24 pb-16"
-    >
-      {/* Ambient blobs */}
-      <div
-        className="blob left-[-10%] top-[10%] h-[420px] w-[420px]"
-        style={{ background: 'radial-gradient(circle, rgba(109,93,252,0.7), transparent 70%)' }}
-      />
-      <div
-        className="blob right-[-8%] top-[30%] h-[380px] w-[380px]"
-        style={{ background: 'radial-gradient(circle, rgba(34,211,238,0.55), transparent 70%)', animationDelay: '-6s' }}
-      />
-      <div
-        className="blob bottom-[-10%] left-[30%] h-[400px] w-[400px]"
-        style={{ background: 'radial-gradient(circle, rgba(244,114,182,0.45), transparent 70%)', animationDelay: '-12s' }}
-      />
+    <section id="home" aria-labelledby="hero-title" className="relative overflow-hidden pb-12 pt-24 sm:pt-32 lg:pb-16">
+      <div aria-hidden="true" className="bg-grid pointer-events-none absolute inset-0" />
+      <div aria-hidden="true" className="bg-glow pointer-events-none absolute inset-0" />
+      <div aria-hidden="true" className="orb orb-a" />
+      <div aria-hidden="true" className="orb orb-b" />
 
-      <div className="container-x grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr]">
-        {/* ── Left: intro & contact details ── */}
-        <div className="text-left">
-          <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={0}>
-            <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3.5 py-1.5 text-xs font-medium text-emerald-300 sm:px-4">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-              </span>
-              {personal.availability}
+      <div className="hero-in container-x relative grid items-center gap-12 lg:grid-cols-[1.25fr_0.75fr] lg:gap-16">
+        <div>
+          <p className="inline-flex items-center gap-2.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1.5 text-xs font-medium text-emerald-400 backdrop-blur-sm">
+            <span className="relative flex h-2 w-2" aria-hidden="true">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60 motion-reduce:hidden" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
             </span>
-          </motion.div>
+            {personal.availability}
+          </p>
 
-          <motion.h1
-            variants={fadeUp}
-            initial="hidden"
-            animate="visible"
-            custom={1}
-            className="mt-5 text-3xl font-extrabold leading-tight text-white xs:text-4xl sm:text-5xl lg:text-6xl"
-          >
-            Hi, I'm{' '}
-            <span className="text-gradient glow-text animate-gradient-x">
-              {personal.name}
-            </span>
-          </motion.h1>
+          <h1 id="hero-title" className="mt-6 whitespace-nowrap text-[1.65rem] font-extrabold leading-[1.1] text-white tracking-tight xs:text-3xl sm:text-4xl lg:text-5xl">
+            {personal.name.split(' ').slice(0, 2).join(' ')}{' '}
+            <span className="text-slate-400 font-medium">{personal.name.split(' ').slice(2).join(' ')}</span>
+          </h1>
 
-          <motion.p
-            variants={fadeUp}
-            initial="hidden"
-            animate="visible"
-            custom={2}
-            className="mt-3.5 font-mono text-base font-medium text-secondary sm:text-xl"
-          >
-            <span className="typing-cursor">&gt; {text}</span>
-          </motion.p>
+          <p className="mt-5 font-display text-xl font-semibold text-fg sm:text-2xl">
+            <RoleTyper words={ROLES} className="text-gradient" />
+          </p>
 
-          <motion.p
-            variants={fadeUp}
-            initial="hidden"
-            animate="visible"
-            custom={3}
-            className="mt-4 max-w-xl text-sm leading-relaxed text-slate-400 sm:text-base"
-          >
-            {personal.tagline} I build production-grade web applications with{' '}
-            <span className="font-medium text-white">React, JavaScript & Python</span> and modern design
-            systems — from pixel-perfect UI to rock-solid APIs.
-          </motion.p>
+          <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">{personal.intro}</p>
 
-          {/* Contact Details (Left Side) */}
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            animate="visible"
-            custom={4}
-            className="mt-6 flex flex-wrap gap-3 text-xs sm:text-sm text-slate-300"
-          >
-            <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-transparent px-3.5 py-2 backdrop-blur">
-              <Mail className="shrink-0 text-primary" fontSize="small" />
-              <a href={`mailto:${personal.email}`} className="transition-colors hover:text-white">
-                {personal.email}
-              </a>
-            </div>
-            <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-transparent px-3.5 py-2 backdrop-blur">
-              <Phone className="shrink-0 text-secondary" fontSize="small" />
-              <a href={`tel:${personal.phone.replace(/\s/g, '')}`} className="transition-colors hover:text-white">
-                {personal.phone}
-              </a>
-            </div>
-            <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-transparent px-3.5 py-2 backdrop-blur">
-              <LocationOn className="shrink-0 text-accent" fontSize="small" />
-              <span>{personal.location}</span>
-            </div>
-          </motion.div>
-
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            animate="visible"
-            custom={5}
-            className="mt-7 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 sm:gap-4"
-          >
-            <a
-              href="#contact"
-              className="group inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-secondary px-6 py-3 text-sm font-semibold text-white shadow-glow transition-transform hover:scale-[1.04] active:scale-95"
-            >
-              <Mail className="transition-transform group-hover:-rotate-6" />
-              Let's Talk
-            </a>
-            <a
-              href="#projects"
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition-colors hover:border-primary/50 hover:bg-primary/10"
-            >
-              <RocketLaunch />
-              View Projects
-            </a>
-            <a
-              href={personal.resumeUrl}
-              download
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-slate-200 backdrop-blur transition-colors hover:border-accent/50 hover:bg-accent/10"
-            >
-              <Download />
-              Resume
-            </a>
-          </motion.div>
-
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            animate="visible"
-            custom={6}
-            className="mt-6 flex items-center gap-3"
-          >
-            {personal.socials.map((s) => (
-              <a
-                key={s.label}
-                href={s.url}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={s.label}
-                className="grid h-11 w-11 place-items-center rounded-xl border border-white/10 bg-white/5 text-slate-300 backdrop-blur transition-all hover:-translate-y-1 hover:border-primary/60 hover:text-white hover:shadow-glow"
-              >
-                {socialIcon(s.icon, 20)}
-              </a>
+          <ul aria-label="Core technologies" className="mt-6 flex flex-wrap gap-2">
+            {personal.coreStack.map((tech) => (
+              <li key={tech} className="chip">
+                {tech}
+              </li>
             ))}
-          </motion.div>
+          </ul>
+
+          <div className="mt-8 flex flex-col gap-3 xs:flex-row xs:flex-wrap">
+            <a href="#projects" className="btn-accent group">
+              View projects
+              <LuArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+            </a>
+            <a href={personal.resumeUrl} download={personal.resumeFileName} className="btn-ghost">
+              <LuDownload className="h-4 w-4" aria-hidden="true" />
+              Download resume
+            </a>
+            <a href="#contact" className="btn-ghost">
+              <LuMail className="h-4 w-4" aria-hidden="true" />
+              Contact me
+            </a>
+          </div>
+
+          <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-slate-400">
+            <span className="inline-flex items-center gap-1.5 font-medium">
+              <LuMapPin className="h-4 w-4 text-blue-400" aria-hidden="true" />
+              {personal.location}
+            </span>
+            <ul className="flex items-center gap-2" aria-label="Social links">
+              {socials.map((s) => (
+                <li key={s.label}>
+                  <a
+                    href={s.url}
+                    {...(s.icon !== 'mail' && { target: '_blank', rel: 'noopener noreferrer' })}
+                    aria-label={s.label}
+                    title={s.label}
+                    className="icon-btn !h-9 !w-9"
+                  >
+                    <Icon name={s.icon} className="h-[18px] w-[18px]" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <dl className="mt-8 grid max-w-md grid-cols-3 gap-3 border-t border-line/20 pt-6">
+            {STATS.map((s) => (
+              <div key={s.label}>
+                <dd className="font-display text-2xl font-extrabold text-white sm:text-3xl">
+                  <CountUp value={s.value} />
+                </dd>
+                <dt className="mt-0.5 text-xs text-slate-400">{s.label}</dt>
+              </div>
+            ))}
+          </dl>
         </div>
 
-        {/* ── Right: Image card only ── */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.4, duration: 0.7, ease: 'easeOut' }}
-          className="relative mt-8 lg:mt-0 flex items-center justify-center"
+        {/* Portrait with cursor tilt */}
+        <div
+          className="tilt relative mx-auto w-full max-w-[340px] lg:max-w-none"
+          onPointerMove={tiltMove}
+          onPointerLeave={tiltLeave}
         >
-          <div className="animate-float relative">
-            <div className="gradient-border glass relative overflow-hidden rounded-3xl p-3 sm:p-4 shadow-glow max-w-[320px] sm:max-w-[360px]">
+          <div className="absolute -inset-4 rounded-[36px] bg-gradient-to-tr from-blue-600/20 via-sky-500/15 to-transparent blur-2xl pointer-events-none" />
+
+          <div className="relative overflow-hidden rounded-[28px] border border-line/30 bg-surface/90 p-2.5 shadow-2xl backdrop-blur-md">
+            <picture>
+              <source type="image/webp" srcSet={personal.avatar.srcSet} sizes="(min-width: 1024px) 360px, 340px" />
               <img
-                src={personal.avatar}
-                alt={personal.name}
-                className="w-full h-[360px] sm:h-[420px] rounded-2xl object-cover object-top transition-transform duration-700 hover:scale-105"
+                src={personal.avatar.fallback}
+                alt={`Portrait of ${personal.name}`}
+                width={personal.avatar.width}
+                height={personal.avatar.height}
+                fetchpriority="high"
+                decoding="async"
+                className="aspect-[4/5] w-full rounded-[20px] bg-surface-2 object-cover object-top ring-1 ring-white/10"
               />
-            </div>
-
-
+            </picture>
           </div>
-        </motion.div>
+        </div>
+      </div>
+      <div className="container-x relative">
+        <TechMarquee />
       </div>
     </section>
   );

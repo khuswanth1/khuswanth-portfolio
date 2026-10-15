@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page not found — Khuswanth Rao Jadav</title>
+    <meta name="robots" content="noindex" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>
+      :root {
+        --bg: #f7f7f4;
+        --surface: #ffffff;
+        --fg: #12141c;
+        --muted: #585d6e;
+        --line: rgba(17, 19, 28, 0.12);
+        --accent: #5446e6;
+        color-scheme: light;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0a0b10;
+          --surface: #12141b;
+          --fg: #ecedf2;
+          --muted: #9ca2b4;
+          --line: rgba(236, 237, 242, 0.1);
+          --accent: #9184ff;
+          color-scheme: dark;
+        }
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 24px 16px;
+        background: radial-gradient(40% 40% at 20% 10%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 70%), var(--bg);
+        color: var(--fg);
+        font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+      }
+      main { max-width: 520px; text-align: center; }
+      .code {
+        font-family: ui-monospace, 'JetBrains Mono', monospace;
+        font-size: 13px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+      h1 { margin: 12px 0 0; font-size: clamp(2rem, 6vw, 3rem); line-height: 1.1; letter-spacing: -0.02em; }
+      p { color: var(--muted); line-height: 1.6; }
+      .actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 28px; }
+      a.btn {
+        display: inline-flex; align-items: center; justify-content: center;
+        padding: 12px 20px; border-radius: 12px; font-weight: 600; font-size: 14px; text-decoration: none;
+        border: 1px solid var(--line); background: var(--surface); color: var(--fg);
+      }
+      a.btn.primary { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+      a.btn:hover { border-color: var(--accent); }
+      a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="code">Error 404</p>
+      <h1>This page doesn't exist</h1>
+      <p>The link may be broken or the page may have moved. Everything lives on the home page — projects, experience and contact details.</p>
+      <div class="actions">
+        <a class="btn primary" href="/">Back to the portfolio</a>
+        <a class="btn" href="/#projects">See projects</a>
+        <a class="btn" href="mailto:khuswanthraojadav@gmail.com">Email me</a>
+      </div>
+    </main>
+  </body>
+</html>

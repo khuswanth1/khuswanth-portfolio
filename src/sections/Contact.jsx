@@ -1,329 +1,304 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useCallback, useRef, useState } from 'react';
 import {
-  Email,
-  LocationOn,
-  Send,
-  CheckCircleOutline,
-  ErrorOutline,
-  Phone,
-  GitHub,
-  LinkedIn,
-  RestartAlt,
-} from '@mui/icons-material';
-import SectionHeading from '../components/SectionHeading';
+  LuSend, LuMail, LuLinkedin, LuGithub, LuMapPin, LuPhone, LuLoaderCircle, LuCopy, LuCheck,
+} from 'react-icons/lu';
+import Section from '../components/Section';
+import Reveal from '../components/Reveal';
+import Toast from '../components/Toast';
 import { personal } from '../data/personal';
-import useInView from '../hooks/useInView';
+import { track } from '../lib/analytics';
 
-const INITIAL_FORM = { name: '', email: '', message: '' };
+const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+const INITIAL_FORM = { name: '', email: '', message: '', website: '' };
+const LIMITS = { name: 80 };
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+// Mirrors the server rules in server/contact/forms.py.
+function validateField(name, value) {
+  const v = value.trim();
+  switch (name) {
+    case 'name':
+      if (v.length < 2) return 'Please enter your name.';
+      if (v.length > LIMITS.name) return `Name must be at most ${LIMITS.name} characters.`;
+      return '';
+    case 'email':
+      return EMAIL_RE.test(v) ? '' : 'Please enter a valid email address.';
+    case 'message':
+      if (v.length < 10) return 'Message should be at least 10 characters.';
+      return '';
+    default:
+      return '';
+  }
+}
+
+const contactLinks = [
+  { icon: LuMail, label: 'Email', value: personal.email, href: `mailto:${personal.email}` },
+  { icon: LuLinkedin, label: 'LinkedIn', value: 'in/khuswanth-rao-jadav', href: personal.linkedin, external: true },
+  { icon: LuGithub, label: 'GitHub', value: 'github.com/khuswanth1', href: personal.github, external: true },
+  { icon: LuPhone, label: 'Phone', value: personal.phone, href: `tel:${personal.phone.replace(/\s/g, '')}` },
+  { icon: LuMapPin, label: 'Location', value: personal.location },
+];
+
+function Field({ id, label, error, hint, children }) {
+  return (
+    <div>
+      <div className="mb-2 flex items-baseline justify-between gap-2">
+        <label htmlFor={id} className="text-sm font-semibold text-slate-200">
+          {label}
+        </label>
+        {hint}
+      </div>
+      {children}
+      <p id={`${id}-error`} className="mt-1.5 min-h-[1.25rem] text-xs font-medium text-rose-400" aria-live="polite">
+        {error}
+      </p>
+    </div>
+  );
+}
 
 export default function Contact() {
-  const { ref, inView } = useInView();
   const [form, setForm] = useState(INITIAL_FORM);
-  const [status, setStatus] = useState(null); // 'loading' | 'success' | 'error'
-  const [errorMessage, setErrorMessage] = useState('');
   const [errors, setErrors] = useState({});
-
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-  const WEBHOOK_URL = import.meta.env.VITE_WEBHOOK_URL || '';
-
-  const triggerFrontendWebhook = async (payload) => {
-    if (!WEBHOOK_URL) return;
-    try {
-      const isDiscordOrSlack = WEBHOOK_URL.includes('discord.com') || WEBHOOK_URL.includes('slack.com');
-      const bodyData = isDiscordOrSlack
-        ? {
-            content: `**New Portfolio Contact Submission**`,
-            embeds: [
-              {
-                title: "Frontend Contact Submission",
-                color: 3719160,
-                fields: [
-                  { name: "Name", value: payload.name || "N/A", inline: true },
-                  { name: "Email", value: payload.email || "N/A", inline: true },
-                  { name: "Message", value: payload.message || "N/A" },
-                ],
-                timestamp: new Date().toISOString(),
-              },
-            ],
-          }
-        : {
-            event: 'frontend_contact_submission',
-            data: payload,
-            timestamp: new Date().toISOString(),
-          };
-
-      await fetch(WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(bodyData),
-      });
-      console.log('Frontend Webhook sent successfully to:', WEBHOOK_URL);
-    } catch (err) {
-      console.warn('Frontend Webhook warning:', err.message);
-    }
-  };
-
-  const [successMessage, setSuccessMessage] = useState('');
+  const [status, setStatus] = useState({ type: 'idle', message: '' }); // idle | loading | success | error
+  const [toast, setToast] = useState(null);
+  const closeToast = useCallback(() => setToast(null), []);
+  const notify = (type, title, message, action) => setToast({ id: Date.now(), type, title, message, action });
+  const [copied, setCopied] = useState(false);
+  const formRef = useRef(null);
 
   const handleChange = (e) => {
-    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
-    if (errors[e.target.name]) {
-      setErrors((prev) => ({ ...prev, [e.target.name]: '' }));
+    const { name, value } = e.target;
+    setForm((f) => ({ ...f, [name]: value }));
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }));
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    if (value) setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }));
+  };
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(personal.email);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      window.location.href = `mailto:${personal.email}`;
     }
-  };
-
-  const handleReset = () => {
-    setForm(INITIAL_FORM);
-    setErrors({});
-    setStatus(null);
-    setErrorMessage('');
-    setSuccessMessage('');
-  };
-
-  const validate = () => {
-    const next = {};
-    if (form.name.trim().length < 2) next.name = 'Please enter your name.';
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) next.email = 'Please enter a valid email.';
-    if (form.message.trim().length < 10) next.message = 'Message should be at least 10 characters.';
-    setErrors(next);
-    return Object.keys(next).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validate()) return;
+    const next = Object.fromEntries(['name', 'email', 'message'].map((k) => [k, validateField(k, form[k])]));
+    setErrors(next);
+    const firstInvalid = Object.keys(next).find((k) => next[k]);
+    if (firstInvalid) {
+      notify('error', 'Check your details', next[firstInvalid]);
+      formRef.current?.elements[firstInvalid]?.focus();
+      return;
+    }
 
-    setStatus('loading');
-    setErrors({});
-    setErrorMessage('');
-    setSuccessMessage('');
+    // Honeypot: real visitors never see or fill this field.
+    if (form.website) {
+      setStatus({ type: 'success', message: "Thanks! Your message has been sent." });
+      notify('success', 'Message sent', 'Thanks! Your message has been sent.');
+      setForm(INITIAL_FORM);
+      return;
+    }
 
-    const payload = {
-      name: form.name,
-      email: form.email,
-      message: form.message,
-    };
+    const payload = { name: form.name.trim(), email: form.email.trim(), message: form.message.trim() };
 
-    // Trigger optional frontend webhook
-    triggerFrontendWebhook(payload);
+    // Without a configured API, hand the message to the visitor's email app instead.
+    if (!API_URL) {
+      const subject = encodeURIComponent(`Portfolio enquiry from ${payload.name}`);
+      const body = encodeURIComponent(`${payload.message}\n\n— ${payload.name} (${payload.email})`);
+      window.location.href = `mailto:${personal.email}?subject=${subject}&body=${body}`;
+      setStatus({ type: 'success', message: 'Your email app should open with the message ready to send.' });
+      notify('success', 'Almost there', 'Your email app should open with the message ready to send.');
+      return;
+    }
+
+    setStatus({ type: 'loading', message: '' });
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
 
     try {
       const res = await fetch(`${API_URL}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
+        signal: controller.signal,
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
 
-      if (!res.ok) {
-        const errorText = Array.isArray(data.errors)
-          ? data.errors.map((e) => (typeof e === 'object' ? e.message : e)).join(', ')
-          : data.error || data.message || 'Failed to send message';
-        throw new Error(errorText);
+      if (res.status === 422 && Array.isArray(data.errors)) {
+        const fieldErrors = Object.fromEntries(
+          data.errors.filter((er) => er?.field).map((er) => [er.field, er.message])
+        );
+        setErrors(fieldErrors);
+        throw new Error('Please fix the highlighted fields.');
       }
-      setStatus('success');
-      setSuccessMessage(data.message || "Message sent! I'll get back to you soon.");
+      if (res.status === 429) {
+        throw new Error('Too many messages from this network. Please try again later or email me directly.');
+      }
+      if (!res.ok) {
+        throw new Error(data.error || data.message || 'The message could not be delivered.');
+      }
+
+      const okMessage = data.message || "Thanks! Your message has been sent — I'll reply soon.";
+      setStatus({ type: 'success', message: okMessage });
+      notify('success', 'Message sent', okMessage);
       setForm(INITIAL_FORM);
-      setTimeout(() => setStatus(null), 7000);
+      setErrors({});
+      track('contact_submit');
     } catch (err) {
-      setStatus('error');
-      setErrorMessage(err.message);
-      console.error('Contact form error:', err.message);
-      setTimeout(() => setStatus(null), 8000);
+      const message =
+        err.name === 'AbortError' || err instanceof TypeError
+          ? "Couldn't reach the server. Please check your connection or email me directly."
+          : err.message;
+      setStatus({ type: 'error', message });
+      notify(
+        'error',
+        'Message not sent',
+        message,
+        <a href={`mailto:${personal.email}`} className="mt-1.5 inline-block text-sm font-semibold text-rose-300 underline">
+          {personal.email}
+        </a>
+      );
+    } finally {
+      clearTimeout(timeout);
     }
   };
 
-  const githubSocial = personal.socials.find((s) => s.label === 'GitHub') || {};
-  const linkedinSocial = personal.socials.find((s) => s.label === 'LinkedIn') || {};
-
-  const infoCards = [
-    { icon: <Email />, label: 'Email', value: personal.email, href: `mailto:${personal.email}` },
-    { icon: <Phone />, label: 'Phone', value: personal.phone, href: `tel:${personal.phone.replace(/\s/g, '')}` },
-    { icon: <LocationOn />, label: 'Location', value: personal.location },
-    {
-      icon: <GitHub />,
-      label: 'GitHub',
-      value: 'github.com/khuswanth1',
-      href: githubSocial.url || 'https://github.com/khuswanth1',
-      external: true,
-    },
-    {
-      icon: <LinkedIn />,
-      label: 'LinkedIn',
-      value: 'linkedin.com/in/khuswanth-rao-jadav',
-      href: linkedinSocial.url || 'https://www.linkedin.com/in/khuswanth-rao-jadav/',
-      external: true,
-    },
-  ];
+  const loading = status.type === 'loading';
 
   return (
-    <section id="contact" className="relative z-10 py-24">
-      <div className="container-x">
-        <SectionHeading
-          kicker="Get In Touch"
-          title="Let's build something great together"
-          description="Have a role, project or just want to say hi? My inbox is always open."
-        />
-
-        <div ref={ref} className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
-          {/* ── Left: info ── */}
-          <div className="space-y-4">
-            {infoCards.map((card, i) => (
-              <motion.div
-                key={card.label}
-                initial={{ opacity: 0, x: -25 }}
-                animate={inView ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="glass glass-hover flex items-center gap-4 rounded-2xl p-5"
+    <Section
+      id="contact"
+      kicker="Contact"
+      title="Let's talk"
+      description="Hiring for a Frontend, React or Full-Stack role, or have a project in mind? Send a message — I usually reply within a day."
+    >
+      <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
+        <Reveal className="space-y-3">
+          {contactLinks.map(({ icon: IconComp, label, value, href, external }) => {
+            const content = (
+              <>
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-blue-500/15 text-blue-400 ring-1 ring-blue-500/30">
+                  <IconComp className="h-[18px] w-[18px]" aria-hidden="true" />
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-xs font-medium text-slate-400">{label}</span>
+                  <span className="block truncate text-sm font-semibold text-white">{value}</span>
+                </span>
+              </>
+            );
+            return href ? (
+              <a
+                key={label}
+                href={href}
+                {...(external && { target: '_blank', rel: 'noopener noreferrer' })}
+                className="card card-hover flex items-center gap-4 p-4 border-line/20 bg-surface/90"
               >
-                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-primary to-secondary text-white shadow-glow">
-                  {card.icon}
-                </span>
-                <div className="min-w-0">
-                  <p className="font-mono text-[10px] tracking-widest text-slate-500 uppercase">
-                    {card.label}
-                  </p>
-                  {card.href ? (
-                    <a
-                      href={card.href}
-                      target={card.external ? '_blank' : undefined}
-                      rel={card.external ? 'noopener noreferrer' : undefined}
-                      className="block truncate text-sm font-medium text-white transition-colors hover:text-secondary"
-                    >
-                      {card.value}
-                    </a>
-                  ) : (
-                    <p className="truncate text-sm font-medium text-white">{card.value}</p>
-                  )}
-                </div>
-              </motion.div>
-            ))}
+                {content}
+              </a>
+            ) : (
+              <div key={label} className="card flex items-center gap-4 p-4 border-line/20 bg-surface/90">
+                {content}
+              </div>
+            );
+          })}
+          <button type="button" onClick={copyEmail} className="btn-ghost w-full">
+            {copied ? <LuCheck className="h-4 w-4 text-emerald-400" aria-hidden="true" /> : <LuCopy className="h-4 w-4" aria-hidden="true" />}
+            {copied ? 'Email copied to clipboard' : 'Copy email address'}
+          </button>
+          <span className="sr-only" aria-live="polite">
+            {copied ? 'Email address copied to clipboard' : ''}
+          </span>
+        </Reveal>
 
-            {/* Availability note */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={inView ? { opacity: 1 } : {}}
-              transition={{ delay: 0.5 }}
-              className="gradient-border rounded-2xl p-5"
-            >
-              <p className="flex items-center gap-2 text-sm text-slate-300">
-                <span className="relative flex h-2.5 w-2.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" />
-                </span>
-                {personal.availability}
-              </p>
-              <p className="mt-2 font-mono text-xs text-slate-500">
-                Usually replies within 24 hours ⚡
-              </p>
-            </motion.div>
-          </div>
-
-          {/* ── Right: form ── */}
-          <motion.form
-            initial={{ opacity: 0, y: 25 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            onSubmit={handleSubmit}
-            noValidate
-            className="glass rounded-3xl p-5 sm:p-8"
-          >
-            <div className="grid gap-5 sm:grid-cols-2">
-              <div>
-                <label htmlFor="name" className="mb-1.5 block text-xs font-medium text-slate-400">
-                  Your Name
-                </label>
+        <Reveal delay={100}>
+          <form ref={formRef} onSubmit={handleSubmit} noValidate className="card p-6 sm:p-8 border-line/20 bg-surface/90">
+            <div className="grid gap-x-5 sm:grid-cols-2">
+              <Field id="name" label="Name" error={errors.name}>
                 <input
                   id="name"
                   name="name"
                   type="text"
+                  autoComplete="name"
+                  required
+                  maxLength={LIMITS.name}
                   value={form.name}
                   onChange={handleChange}
-                  placeholder="John Doe"
-                  className={`field-input ${errors.name ? 'border-red-500/60 focus:border-red-500' : ''}`}
+                  onBlur={handleBlur}
+                  aria-invalid={Boolean(errors.name)}
+                  aria-describedby="name-error"
+                  className="field"
+                  placeholder="Your name"
                 />
-                {errors.name && <p className="mt-1 text-xs text-red-400">{errors.name}</p>}
-              </div>
-              <div>
-                <label htmlFor="email" className="mb-1.5 block text-xs font-medium text-slate-400">
-                  Email Address
-                </label>
+              </Field>
+              <Field id="email" label="Email" error={errors.email}>
                 <input
                   id="email"
                   name="email"
                   type="email"
+                  inputMode="email"
+                  autoComplete="email"
+                  required
                   value={form.email}
                   onChange={handleChange}
-                  placeholder="john@example.com"
-                  className={`field-input ${errors.email ? 'border-red-500/60 focus:border-red-500' : ''}`}
+                  onBlur={handleBlur}
+                  aria-invalid={Boolean(errors.email)}
+                  aria-describedby="email-error"
+                  className="field"
+                  placeholder="you@company.com"
                 />
-                {errors.email && <p className="mt-1 text-xs text-red-400">{errors.email}</p>}
-              </div>
+              </Field>
             </div>
 
-            <div className="mt-5">
-              <label htmlFor="message" className="mb-1.5 block text-xs font-medium text-slate-400">
-                Message
-              </label>
+            <Field
+              id="message"
+              label="Message"
+              error={errors.message}
+            >
               <textarea
                 id="message"
                 name="message"
-                rows={5}
+                rows={6}
+                required
                 value={form.message}
                 onChange={handleChange}
-                placeholder="Hi Khuswanth Rao Jadav, I'd like discuss ..."
-                className={`field-input resize-none ${errors.message ? 'border-red-500/60 focus:border-red-500' : ''}`}
+                onBlur={handleBlur}
+                aria-invalid={Boolean(errors.message)}
+                aria-describedby="message-error"
+                className="field resize-y"
+                placeholder="Tell me about the role or project…"
               />
-              {errors.message && <p className="mt-1 text-xs text-red-400">{errors.message}</p>}
+            </Field>
+
+            {/* Honeypot (hidden from people and assistive tech) */}
+            <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+              <label htmlFor="website">Website</label>
+              <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" value={form.website} onChange={handleChange} />
             </div>
 
-            {/* Status messages */}
-            {status === 'success' && (
-              <div className="mt-5 flex items-center gap-2.5 rounded-xl border border-emerald-400/25 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-300">
-                <CheckCircleOutline fontSize="small" />
-                {successMessage || "Message sent! I'll get back to you soon."} 
-              </div>
-            )}
-            {status === 'error' && (
-              <div className="mt-5 flex items-center gap-2.5 rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm text-red-300">
-                <ErrorOutline fontSize="small" />
-                {errorMessage || 'Something went wrong. Please try again or email me directly.'}
-              </div>
-            )}
-
-            <div className="mt-6 flex flex-col sm:flex-row items-center gap-3">
-              <button
-                type="submit"
-                disabled={status === 'loading'}
-                className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-secondary px-6 py-3.5 text-sm font-semibold text-white shadow-glow transition-all hover:scale-[1.02] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
-              >
-                {status === 'loading' ? (
-                  <>
-                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                    Sending...
-                  </>
-                ) : (
-                  <>
-                    Send Message
-                    <Send fontSize="small" className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-0.5" />
-                  </>
-                )}
-              </button>
-
-              <button
-                type="button"
-                onClick={handleReset}
-                disabled={status === 'loading'}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-transparent px-5 py-3.5 text-sm font-semibold text-slate-300 backdrop-blur transition-all hover:border-red-400/50 hover:bg-red-500/10 hover:text-red-300 disabled:opacity-50 sm:w-auto"
-              >
-                <RestartAlt fontSize="small" />
-                Reset
-              </button>
-            </div>
-          </motion.form>
-        </div>
+            <button type="submit" disabled={loading} className="btn-accent w-full sm:w-auto">
+              {loading ? (
+                <>
+                  <LuLoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />
+                  Sending…
+                </>
+              ) : (
+                <>
+                  Send message
+                  <LuSend className="h-4 w-4" aria-hidden="true" />
+                </>
+              )}
+            </button>
+          </form>
+        </Reveal>
       </div>
-    </section>
+      <Toast toast={toast} onClose={closeToast} />
+    </Section>
   );
 }
