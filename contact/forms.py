@@ -27,10 +27,9 @@ class ContactForm(forms.Form):
         "required": "Please enter a valid email.",
         "invalid": "Please enter a valid email.",
     })
-    message = forms.CharField(min_length=10, max_length=2000, error_messages={
+    message = forms.CharField(min_length=10, error_messages={
         "required": "Message should be at least 10 characters.",
         "min_length": "Message should be at least 10 characters.",
-        "max_length": "Message must be at most 2000 characters.",
     })
 
     def clean_email(self):

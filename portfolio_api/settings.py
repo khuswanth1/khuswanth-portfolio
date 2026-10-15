@@ -79,8 +79,8 @@ USE_TZ = True
 TIME_ZONE = "UTC"
 
 # ── Request limits ────────────────────────────────────────────────────
-# A contact message is < 3 KB of JSON; refuse anything far bigger before parsing.
-DATA_UPLOAD_MAX_MEMORY_SIZE = 16 * 1024
+# Messages have no character limit, so allow generous bodies (1 MB) while still refusing absurd ones.
+DATA_UPLOAD_MAX_MEMORY_SIZE = 1024 * 1024
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 20
 
 # ── Security headers ──────────────────────────────────────────────────
@@ -119,7 +119,9 @@ if env("REDIS_URL"):
 else:
     CACHES = {"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache", "LOCATION": "contact"}}
 
-CONTACT_RATE_LIMIT = env_int("CONTACT_RATE_LIMIT", 5 if IS_PRODUCTION else 100)
+# 0 = unlimited (the default). Set a positive number to cap messages per IP / per day.
+CONTACT_RATE_LIMIT = env_int("CONTACT_RATE_LIMIT", 0)
+CONTACT_DAILY_LIMIT = env_int("CONTACT_DAILY_LIMIT", 0)
 CONTACT_RATE_WINDOW_SECONDS = env_int("CONTACT_RATE_WINDOW_SECONDS", 15 * 60)
 
 # ── Email (SMTP) ──────────────────────────────────────────────────────

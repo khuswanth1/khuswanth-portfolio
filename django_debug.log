@@ -1,3 +1,131 @@
 2026-10-05 21:16:39,021 INFO django.utils.autoreload: Watching for file changes with StatReloader
 2026-10-05 21:23:30,447 INFO django.utils.autoreload: Watching for file changes with StatReloader
 2026-10-05 21:24:29,670 INFO contact.views: [18c3b708bdc3] Contact message delivered via smtp (sender domain: gmail.com)
+2026-10-15 12:29:14,845 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2026-10-15 12:29:41,164 INFO contact.views: [77dea5c6b0c3] Contact message delivered via smtp (sender domain: gmail.com)
+2026-10-15 12:55:06,901 INFO contact.views: [c0086cd12444] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 12:55:43,142 INFO contact.views: [d35689edde6e] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:44:28,091 INFO contact.views: [343fde039083] Contact message delivered via smtp (sender domain: gmai.com)
+2026-10-15 15:45:38,201 INFO contact.views: [c9cb0c4e5562] Contact message delivered via smtp (sender domain: gmai.com)
+2026-10-15 15:47:09,365 INFO contact.views: [a4cc3078fdaf] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:47:09,367 ERROR contact.services: [edf27b58d500] SMTP delivery failed: OSError: quota
+2026-10-15 15:47:09,368 INFO contact.views: [edf27b58d500] Contact message delivered via resend (sender domain: example.com)
+2026-10-15 15:47:09,375 ERROR django.security.RequestDataTooBig: Request body exceeded settings.DATA_UPLOAD_MAX_MEMORY_SIZE.
+Traceback (most recent call last):
+  File "D:\Khuswanth protfolio\server\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Khuswanth protfolio\server\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Khuswanth protfolio\server\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Khuswanth protfolio\server\.venv\Lib\site-packages\django\views\decorators\http.py", line 64, in inner
+    return func(request, *args, **kwargs)
+  File "D:\Khuswanth protfolio\server\contact\views.py", line 46, in contact
+    payload = json.loads(request.body or b"{}")
+                         ^^^^^^^^^^^^
+  File "D:\Khuswanth protfolio\server\.venv\Lib\site-packages\django\http\request.py", line 387, in body
+    self._check_data_too_big(int(self.META.get("CONTENT_LENGTH") or 0))
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Khuswanth protfolio\server\.venv\Lib\site-packages\django\http\request.py", line 425, in _check_data_too_big
+    raise RequestDataTooBig(msg)
+django.core.exceptions.RequestDataTooBig: Request body exceeded settings.DATA_UPLOAD_MAX_MEMORY_SIZE.
+2026-10-15 15:47:09,379 INFO contact.views: [e96ad6326cc4] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:47:09,381 INFO contact.views: [528fdff1266e] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:47:09,382 INFO contact.views: [71585507b7fe] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:47:09,383 INFO contact.views: [75e1407c1d13] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:47:09,383 INFO contact.views: [f7ff6d13faee] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:47:09,384 INFO contact.views: [8a65e8036ec3] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:47:09,387 ERROR contact.services: [9d6b6fc9a2cc] SMTP delivery failed: OSError: smtp down
+2026-10-15 15:47:09,388 ERROR django.request: Bad Gateway: /api/contact
+2026-10-15 15:47:09,389 INFO contact.views: [697d691e586e] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:47:15,266 INFO contact.views: [934f55f99dcc] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:47:15,268 ERROR contact.services: [9ce992a17734] SMTP delivery failed: OSError: quota
+2026-10-15 15:47:15,270 INFO contact.views: [9ce992a17734] Contact message delivered via resend (sender domain: example.com)
+2026-10-15 15:47:15,275 ERROR django.security.RequestDataTooBig: Request body exceeded settings.DATA_UPLOAD_MAX_MEMORY_SIZE.
+Traceback (most recent call last):
+  File "D:\Khuswanth protfolio\server\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Khuswanth protfolio\server\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Khuswanth protfolio\server\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Khuswanth protfolio\server\.venv\Lib\site-packages\django\views\decorators\http.py", line 64, in inner
+    return func(request, *args, **kwargs)
+  File "D:\Khuswanth protfolio\server\contact\views.py", line 46, in contact
+    payload = json.loads(request.body or b"{}")
+                         ^^^^^^^^^^^^
+  File "D:\Khuswanth protfolio\server\.venv\Lib\site-packages\django\http\request.py", line 387, in body
+    self._check_data_too_big(int(self.META.get("CONTENT_LENGTH") or 0))
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Khuswanth protfolio\server\.venv\Lib\site-packages\django\http\request.py", line 425, in _check_data_too_big
+    raise RequestDataTooBig(msg)
+django.core.exceptions.RequestDataTooBig: Request body exceeded settings.DATA_UPLOAD_MAX_MEMORY_SIZE.
+2026-10-15 15:47:15,277 INFO contact.views: [b06fb84e909a] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:47:15,278 INFO contact.views: [f342338b4814] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:47:15,279 INFO contact.views: [7ae31fb29fa2] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:47:15,280 INFO contact.views: [da2c2f0b3b99] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:47:15,281 INFO contact.views: [919a0069db97] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:47:15,281 INFO contact.views: [905b16ab5d8e] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:47:15,283 ERROR contact.services: [44fdc0ece6d1] SMTP delivery failed: OSError: smtp down
+2026-10-15 15:47:15,283 ERROR django.request: Bad Gateway: /api/contact
+2026-10-15 15:47:15,283 INFO contact.views: [492a97408c10] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:50:10,754 INFO contact.views: [7f55044125d0] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:50:10,757 ERROR contact.services: [049e2e2bd4b3] SMTP delivery failed: OSError: quota
+2026-10-15 15:50:10,760 INFO contact.views: [049e2e2bd4b3] Contact message delivered via resend (sender domain: example.com)
+2026-10-15 15:50:10,766 INFO contact.views: [1083969b23d3] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:50:10,770 INFO contact.views: [08604428a8f4] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:50:10,772 INFO contact.views: [9461787e15e6] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:50:10,773 INFO contact.views: [bf4fd8045d2f] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:50:10,776 INFO contact.views: [82f9318b0eb6] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:50:10,777 INFO contact.views: [0b72feb4bb22] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:50:10,778 INFO contact.views: [ba708eb39910] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:50:10,780 ERROR contact.services: [02af9059175b] SMTP delivery failed: OSError: smtp down
+2026-10-15 15:50:10,780 ERROR django.request: Bad Gateway: /api/contact
+2026-10-15 15:50:10,781 INFO contact.views: [ef5658637e7d] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:50:21,113 INFO contact.views: [5ba062c91e70] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:50:21,115 ERROR contact.services: [6abe08520e11] SMTP delivery failed: OSError: quota
+2026-10-15 15:50:21,118 INFO contact.views: [6abe08520e11] Contact message delivered via resend (sender domain: example.com)
+2026-10-15 15:50:21,124 INFO contact.views: [47e9438c8aa9] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:50:21,125 INFO contact.views: [48012159bd40] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:50:21,126 INFO contact.views: [0de51cf8ece4] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:50:21,126 INFO contact.views: [6f26a19740a8] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:50:21,127 INFO contact.views: [63ef5398a0ef] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:50:21,127 INFO contact.views: [6a12590036f0] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:50:21,128 INFO contact.views: [00d7fdbf4d98] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:50:21,131 ERROR contact.services: [b8986fcc9d21] SMTP delivery failed: OSError: smtp down
+2026-10-15 15:50:21,131 ERROR django.request: Bad Gateway: /api/contact
+2026-10-15 15:50:21,132 INFO contact.views: [9f30e339c6fc] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:50:28,424 INFO contact.views: [7629f356d4e2] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:50:28,426 ERROR contact.services: [389bffa12b1d] SMTP delivery failed: OSError: quota
+2026-10-15 15:50:28,429 INFO contact.views: [389bffa12b1d] Contact message delivered via resend (sender domain: example.com)
+2026-10-15 15:50:28,434 INFO contact.views: [c12b943388c4] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:50:28,441 ERROR django.security.RequestDataTooBig: Request body exceeded settings.DATA_UPLOAD_MAX_MEMORY_SIZE.
+Traceback (most recent call last):
+  File "D:\Khuswanth protfolio\server\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Khuswanth protfolio\server\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Khuswanth protfolio\server\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Khuswanth protfolio\server\.venv\Lib\site-packages\django\views\decorators\http.py", line 64, in inner
+    return func(request, *args, **kwargs)
+  File "D:\Khuswanth protfolio\server\contact\views.py", line 46, in contact
+    payload = json.loads(request.body or b"{}")
+                         ^^^^^^^^^^^^
+  File "D:\Khuswanth protfolio\server\.venv\Lib\site-packages\django\http\request.py", line 387, in body
+    self._check_data_too_big(int(self.META.get("CONTENT_LENGTH") or 0))
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Khuswanth protfolio\server\.venv\Lib\site-packages\django\http\request.py", line 425, in _check_data_too_big
+    raise RequestDataTooBig(msg)
+django.core.exceptions.RequestDataTooBig: Request body exceeded settings.DATA_UPLOAD_MAX_MEMORY_SIZE.
+2026-10-15 15:50:28,443 INFO contact.views: [6840365f05c2] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:50:28,444 INFO contact.views: [c5042acb1057] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:50:28,444 INFO contact.views: [d35f33245618] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:50:28,445 INFO contact.views: [455aac9610e5] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:50:28,446 INFO contact.views: [d31f72d4988a] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:50:28,447 INFO contact.views: [d1b7cf3169c8] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:50:28,448 ERROR contact.services: [a38a9f35ff6d] SMTP delivery failed: OSError: smtp down
+2026-10-15 15:50:28,448 ERROR django.request: Bad Gateway: /api/contact
+2026-10-15 15:50:28,448 INFO contact.views: [308334592fa6] Contact message delivered via smtp (sender domain: example.com)
+2026-10-15 15:55:53,686 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2026-10-15 15:57:02,561 INFO contact.views: [4235cfd49574] Contact message delivered via smtp (sender domain: private.com)

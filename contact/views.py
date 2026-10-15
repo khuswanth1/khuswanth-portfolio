@@ -15,7 +15,6 @@ logger = logging.getLogger(__name__)
 
 _STARTED = time.monotonic()
 # Global cap on sends per day, so a botnet rotating IPs can't burn the Gmail quota.
-_DAILY_SEND_LIMIT = 200
 
 
 def _error(status, message, **extra):
@@ -62,18 +61,23 @@ def contact(request):
         ]
         return _error(422, "Please fix the highlighted fields.", errors=errors)
 
-    allowed, retry_after = ratelimit.hit(
-        "contact",
-        ratelimit.client_ip(request),
-        settings.CONTACT_RATE_LIMIT,
-        settings.CONTACT_RATE_WINDOW_SECONDS,
-    )
-    if allowed:
-        allowed, retry_after = ratelimit.hit("contact-global", "all", _DAILY_SEND_LIMIT, 24 * 3600)
-    if not allowed:
-        response = _error(429, "Too many messages sent. Please try again later.")
-        response["Retry-After"] = str(retry_after)
-        return response
+    # Sending is unlimited by default. Set CONTACT_RATE_LIMIT (per IP) and/or CONTACT_DAILY_LIMIT
+    # to a number above 0 to switch the limits on.
+    if settings.CONTACT_RATE_LIMIT > 0 or settings.CONTACT_DAILY_LIMIT > 0:
+        allowed, retry_after = True, 0
+        if settings.CONTACT_RATE_LIMIT > 0:
+            allowed, retry_after = ratelimit.hit(
+                "contact",
+                ratelimit.client_ip(request),
+                settings.CONTACT_RATE_LIMIT,
+                settings.CONTACT_RATE_WINDOW_SECONDS,
+            )
+        if allowed and settings.CONTACT_DAILY_LIMIT > 0:
+            allowed, retry_after = ratelimit.hit("contact-global", "all", settings.CONTACT_DAILY_LIMIT, 24 * 3600)
+        if not allowed:
+            response = _error(429, "Too many messages sent. Please try again later.")
+            response["Retry-After"] = str(retry_after)
+            return response
 
     data = form.cleaned_data
     try:

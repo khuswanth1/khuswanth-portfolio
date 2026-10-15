@@ -55,8 +55,12 @@ class ContactApiTests(SimpleTestCase):
         self.assertEqual(res.status_code, 400)
         self.assertFalse(res.json()["success"])
 
-    def test_oversized_body_is_refused(self):
+    def test_long_message_is_accepted(self):
         res = self.post({**VALID, "message": "x" * 50_000})
+        self.assertEqual(res.status_code, 200)
+
+    def test_oversized_body_is_refused(self):
+        res = self.post({**VALID, "message": "x" * 2_000_000})
         self.assertEqual(res.status_code, 400)
 
     def test_rate_limit(self):
