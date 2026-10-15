@@ -73,19 +73,22 @@ def _send_resend(data):
 
 
 def deliver(data, request_id):
-    """Send the message to the owner's inbox. Returns the channel used, raises DeliveryError."""
-    try:
-        _send_smtp(data)
-        return "smtp"
-    except Exception as exc:  # smtplib/socket/ssl errors all land here
-        logger.error("[%s] SMTP delivery failed: %s: %s", request_id, type(exc).__name__, exc)
+    """Send the message to the owner's inbox. Returns the channel used, raises DeliveryError.
 
+    When Resend is configured it goes first: it works over HTTPS, so it keeps working on hosts that
+    block outbound SMTP (e.g. Render's free tier) and avoids waiting on an SMTP timeout. SMTP is the
+    fallback, or the only channel when Resend isn't configured.
+    """
+    channels = [("smtp", _send_smtp)]
     if settings.RESEND_API_KEY and settings.RESEND_FROM:
+        channels.insert(0, ("resend", _send_resend))
+
+    for name, send in channels:
         try:
-            _send_resend(data)
-            return "resend"
-        except (urllib.error.URLError, TimeoutError, OSError) as exc:
-            logger.error("[%s] Resend fallback failed: %s", request_id, exc)
+            send(data)
+            return name
+        except Exception as exc:  # smtplib / urllib / socket / ssl errors all land here
+            logger.error("[%s] %s delivery failed: %s: %s", request_id, name.upper(), type(exc).__name__, exc)
 
     raise DeliveryError("All delivery channels failed")
 

@@ -111,3 +111,29 @@ class ContactApiTests(SimpleTestCase):
         res = self.client.get("/nope")
         self.assertEqual(res.status_code, 404)
         self.assertFalse(res.json()["success"])
+
+
+@override_settings(RESEND_API_KEY="re_test", RESEND_FROM="Portfolio <onboarding@resend.dev>", WEBHOOK_URL="")
+class DeliveryOrderTests(SimpleTestCase):
+    """Resend (HTTPS) is tried first when configured; SMTP is the fallback."""
+
+    DATA = {"name": "Jane", "email": "jane@example.com", "message": "Hello there, I would like to talk."}
+
+    def test_resend_is_used_first(self):
+
+        from contact import services
+
+        with mock.patch.object(services, "_send_resend") as resend, mock.patch.object(services, "_send_smtp") as smtp:
+            self.assertEqual(services.deliver(self.DATA, "t1"), "resend")
+        resend.assert_called_once()
+        smtp.assert_not_called()
+
+    def test_smtp_is_the_fallback_when_resend_fails(self):
+
+        from contact import services
+
+        with mock.patch.object(services, "_send_resend", side_effect=OSError("down")), mock.patch.object(
+            services, "_send_smtp"
+        ) as smtp:
+            self.assertEqual(services.deliver(self.DATA, "t2"), "smtp")
+        smtp.assert_called_once()
