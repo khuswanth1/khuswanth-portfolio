@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: portfolio-backend
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn portfolio_api.wsgi:application
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: NODE_ENV
+        value: production
+      - key: TRUSTED_PROXY_COUNT
+        value: 1
