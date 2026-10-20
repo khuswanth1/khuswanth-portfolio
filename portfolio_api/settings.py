@@ -102,14 +102,21 @@ if IS_PRODUCTION:
 
 # ── CORS ──────────────────────────────────────────────────────────────
 # The frontend sends no cookies, so credentials stay off.
-CORS_ALLOWED_ORIGINS = env_list("ALLOWED_ORIGIN", "http://localhost:3000")
-if not IS_PRODUCTION:
-    CORS_ALLOWED_ORIGIN_REGEXES = [r"^http://(localhost|127\.0\.0\.1)(:\d+)?$"]
+# Allow all origins by default for the public contact API, plus explicit regex for *.vercel.app and localhost
+CORS_ALLOW_ALL_ORIGINS = env_bool("CORS_ALLOW_ALL_ORIGINS", default=True)
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://.*\.vercel\.app$",
+    r"^http://(localhost|127\.0\.0\.1)(:\d+)?$",
+]
+CORS_ALLOWED_ORIGINS = [
+    "https://portfolio-ten-liard-91.vercel.app",
+    *env_list("ALLOWED_ORIGIN", "http://localhost:3000,http://localhost:5173"),
+]
 CORS_ALLOW_METHODS = ["GET", "POST", "OPTIONS"]
 CORS_ALLOW_HEADERS = ["content-type"]
 CORS_ALLOW_CREDENTIALS = False
 CORS_PREFLIGHT_MAX_AGE = 86400
-CORS_URLS_REGEX = r"^/api/.*$"
+CORS_URLS_REGEX = r"^.*$"
 
 # ── Cache (rate limiting) ─────────────────────────────────────────────
 # In-process memory is enough for one instance. With several workers or
