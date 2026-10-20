@@ -109,8 +109,12 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^http://(localhost|127\.0\.0\.1)(:\d+)?$",
 ]
 CORS_ALLOWED_ORIGINS = [
-    "https://portfolio-ten-liard-91.vercel.app",
-    *env_list("ALLOWED_ORIGIN", "http://localhost:3000,http://localhost:5173"),
+    origin.rstrip("/")
+    for origin in [
+        "https://portfolio-ten-liard-91.vercel.app",
+        *env_list("ALLOWED_ORIGIN", "http://localhost:3000,http://localhost:5173"),
+    ]
+    if origin.strip()
 ]
 CORS_ALLOW_METHODS = ["GET", "POST", "OPTIONS"]
 CORS_ALLOW_HEADERS = ["content-type"]
