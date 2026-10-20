@@ -149,12 +149,18 @@ EMAIL_TIMEOUT = env_int("EMAIL_TIMEOUT", 10)
 EMAIL_TO = env("EMAIL_TO") or EMAIL_HOST_USER
 EMAIL_FROM = env("EMAIL_FROM") or EMAIL_HOST_USER
 
+# Optional fallback / HTTPS providers (works on hosts like Render where SMTP is blocked)
+RESEND_API_KEY = env("RESEND_API_KEY")
+RESEND_FROM = env("RESEND_FROM").strip('"')
+WEB3FORMS_KEY = env("WEB3FORMS_KEY")
+HAS_HTTP_EMAIL_PROVIDER = bool(WEB3FORMS_KEY or (RESEND_API_KEY and RESEND_FROM))
+
 if EMAIL_HOST_PASSWORD:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-elif IS_PRODUCTION:
-    raise ImproperlyConfigured("EMAIL_PASS is required when NODE_ENV=production")
+elif IS_PRODUCTION and not HAS_HTTP_EMAIL_PROVIDER:
+    raise ImproperlyConfigured("EMAIL_PASS or WEB3FORMS_KEY or RESEND_API_KEY is required when NODE_ENV=production")
 else:
-    # Dev without credentials: print emails to the terminal instead of sending.
+    # Dev or production using an HTTP-based provider: console fallback
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 if EMAIL_HOST_PASSWORD and not EMAIL_TO:
@@ -164,11 +170,6 @@ if EMAIL_PORT not in {25, 465, 587, 2525}:
     logger.warning("EMAIL_PORT=%s is unusual; Gmail uses 587 (STARTTLS) or 465 (EMAIL_SECURE=true)", EMAIL_PORT)
 if EMAIL_USE_SSL and EMAIL_PORT == 587:
     logger.warning("EMAIL_SECURE=true with port 587 will fail; use 465, or EMAIL_SECURE=false")
-
-# Optional fallback providers when SMTP fails (e.g. Gmail daily quota or Render SMTP block).
-RESEND_API_KEY = env("RESEND_API_KEY")
-RESEND_FROM = env("RESEND_FROM").strip('"')
-WEB3FORMS_KEY = env("WEB3FORMS_KEY")
 
 # Optional notification (Discord / Slack / any HTTPS endpoint).
 WEBHOOK_URL = env("WEBHOOK_URL")

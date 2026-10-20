@@ -253,3 +253,8 @@ From: Jane Doe <jane@example.com>
 Message: I would like to discuss a role with you.
 2026-10-20 23:04:41,435 INFO contact.views: [4d827a51873e] Contact message delivered via resend (sender domain: example.com)
 2026-10-20 23:04:52,060 INFO contact.views: [cb589af3f574] Contact message delivered via smtp (sender domain: gmail.com)
+2026-10-20 23:08:36,136 INFO django.utils.autoreload: D:\Khuswanth protfolio\server\portfolio_api\urls.py changed, reloading.
+2026-10-20 23:08:36,561 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2026-10-21 00:18:08,640 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2026-10-21 00:20:29,858 INFO django.utils.autoreload: D:\Khuswanth protfolio\server\portfolio_api\settings.py changed, reloading.
+2026-10-21 00:20:30,352 INFO django.utils.autoreload: Watching for file changes with StatReloader

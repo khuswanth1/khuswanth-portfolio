@@ -11,3 +11,9 @@ services:
         value: production
       - key: TRUSTED_PROXY_COUNT
         value: 1
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: WEB3FORMS_KEY
+        sync: false
+      - key: EMAIL_TO
+        value: khuswanthraojadav@gmail.com
