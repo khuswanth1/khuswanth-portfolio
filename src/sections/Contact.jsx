@@ -8,7 +8,7 @@ import Toast from '../components/Toast';
 import { personal } from '../data/personal';
 import { track } from '../lib/analytics';
 
-const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+const API_URL = (import.meta.env.VITE_API_URL || '').split(',')[0].trim().replace(/\/$/, '');
 const INITIAL_FORM = { name: '', email: '', message: '', website: '' };
 const LIMITS = { name: 80 };
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
