@@ -91,7 +91,8 @@ def contact(request):
     # Log metadata only; the message itself lives in the inbox, not in server logs.
     logger.info("[%s] Contact message delivered via %s (sender domain: %s)",
                 request_id, channel, data["email"].rsplit("@", 1)[-1])
-    services.notify_webhook(data, channel, request_id)
+    if channel != "webhook":
+        services.notify_webhook(data, channel, request_id)
 
     return JsonResponse({"success": True, "message": "Message sent! I'll get back to you soon."})
 

@@ -197,3 +197,12 @@ django.core.exceptions.RequestDataTooBig: Request body exceeded settings.DATA_UP
 2026-10-20 17:52:09,640 INFO django.utils.autoreload: Watching for file changes with StatReloader
 2026-10-20 17:53:46,516 INFO django.utils.autoreload: D:\Khuswanth protfolio\server\portfolio_api\settings.py changed, reloading.
 2026-10-20 17:53:47,072 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2026-10-20 18:09:31,286 INFO django.utils.autoreload: D:\Khuswanth protfolio\server\contact\services.py changed, reloading.
+2026-10-20 18:09:31,878 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2026-10-20 18:09:42,263 INFO django.utils.autoreload: D:\Khuswanth protfolio\server\contact\views.py changed, reloading.
+2026-10-20 18:09:42,738 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2026-10-20 18:09:53,140 INFO django.utils.autoreload: D:\Khuswanth protfolio\server\contact\views.py changed, reloading.
+2026-10-20 18:09:53,676 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2026-10-20 18:13:31,330 INFO django.utils.autoreload: D:\Khuswanth protfolio\server\portfolio_api\settings.py changed, reloading.
+2026-10-20 18:13:31,920 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2026-10-20 18:16:10,513 INFO django.utils.autoreload: Watching for file changes with StatReloader

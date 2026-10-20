@@ -78,6 +78,8 @@ def deliver(data, request_id):
     When Resend is configured it goes first: it works over HTTPS, so it keeps working on hosts that
     block outbound SMTP (e.g. Render's free tier) and avoids waiting on an SMTP timeout. SMTP is the
     fallback, or the only channel when Resend isn't configured.
+    If email delivery fails and a webhook is configured (e.g. Discord/Slack), the webhook is used as
+    an immediate delivery fallback so the user's message is not lost.
     """
     channels = [("smtp", _send_smtp)]
     if settings.RESEND_API_KEY and settings.RESEND_FROM:
@@ -89,6 +91,15 @@ def deliver(data, request_id):
             return name
         except Exception as exc:  # smtplib / urllib / socket / ssl errors all land here
             logger.error("[%s] %s delivery failed: %s: %s", request_id, name.upper(), type(exc).__name__, exc)
+
+    if settings.WEBHOOK_URL:
+        try:
+            url = settings.WEBHOOK_URL
+            _post_json(url, _webhook_payload(url, data, "webhook-fallback"))
+            logger.info("[%s] Contact message delivered via webhook-fallback", request_id)
+            return "webhook"
+        except Exception as exc:
+            logger.error("[%s] Fallback webhook delivery failed: %s: %s", request_id, type(exc).__name__, exc)
 
     raise DeliveryError("All delivery channels failed")
 

@@ -1,6 +1,6 @@
 # Portfolio Contact API — Backend Service
 
-A lightweight, stateless Python & Django API service powering the contact form and uptime health monitoring for [Khuswanth Rao Jadav's Portfolio](https://khuswanthportfolio.vercel.app).
+A lightweight, stateless Python & Django API service powering the contact form and uptime health monitoring for [Khuswanth Rao Jadav's Portfolio](https://khuswanth-rao-jadav.vercel.app).
 
 ---
 
@@ -258,6 +258,6 @@ gunicorn portfolio_api.wsgi:application --bind 0.0.0.0:${PORT:-5000} --workers 2
 1. Set `NODE_ENV=production`.
 2. Generate and set `DJANGO_SECRET_KEY`.
 3. Set `ALLOWED_HOSTS` to your production domain / Render host (e.g. `your-api.onrender.com`).
-4. Set `ALLOWED_ORIGIN` to your frontend URL (e.g. `https://khuswanthportfolio.vercel.app`).
+4. Set `ALLOWED_ORIGIN` to your frontend URL (e.g. `https://khuswanth-rao-jadav.vercel.app`).
 5. Ensure `TRUSTED_PROXY_COUNT=1` when deploying behind a reverse proxy (Render, Railway, Cloudflare).
 6. Configure `EMAIL_USER` and `EMAIL_PASS`. Optionally set `RESEND_API_KEY` for fallback redundancy.

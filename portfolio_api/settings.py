@@ -112,6 +112,7 @@ CORS_ALLOWED_ORIGINS = [
     origin.rstrip("/")
     for origin in [
         "https://portfolio-ten-liard-91.vercel.app",
+        "https://khuswanth-rao-jadav.vercel.app",
         *env_list("ALLOWED_ORIGIN", "http://localhost:3000,http://localhost:5173"),
     ]
     if origin.strip()
