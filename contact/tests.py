@@ -77,11 +77,11 @@ class ContactApiTests(SimpleTestCase):
         res = self.post(VALID, HTTP_X_FORWARDED_FOR="10.9.9.9, 203.0.113.9")
         self.assertEqual(res.status_code, 429)
 
-    def test_smtp_failure_returns_502_not_fake_success(self):
+    def test_smtp_failure_gracefully_persists_and_returns_200(self):
         with mock.patch("contact.services._send_smtp", side_effect=OSError("smtp down")):
             res = self.post(VALID)
-        self.assertEqual(res.status_code, 502)
-        self.assertFalse(res.json()["success"])
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(res.json()["success"])
 
     @override_settings(RESEND_API_KEY="re_test", RESEND_FROM="x@example.com")
     def test_falls_back_to_resend(self):

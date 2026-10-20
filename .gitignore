@@ -23,4 +23,7 @@ Thumbs.db
 
 # IDEs
 .vscode/
+
+# Submissions log
+contact_submissions.jsonl
 .idea/

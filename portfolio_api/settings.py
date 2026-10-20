@@ -165,9 +165,10 @@ if EMAIL_PORT not in {25, 465, 587, 2525}:
 if EMAIL_USE_SSL and EMAIL_PORT == 587:
     logger.warning("EMAIL_SECURE=true with port 587 will fail; use 465, or EMAIL_SECURE=false")
 
-# Optional fallback provider when SMTP fails (e.g. Gmail daily quota).
+# Optional fallback providers when SMTP fails (e.g. Gmail daily quota or Render SMTP block).
 RESEND_API_KEY = env("RESEND_API_KEY")
 RESEND_FROM = env("RESEND_FROM").strip('"')
+WEB3FORMS_KEY = env("WEB3FORMS_KEY")
 
 # Optional notification (Discord / Slack / any HTTPS endpoint).
 WEBHOOK_URL = env("WEBHOOK_URL")

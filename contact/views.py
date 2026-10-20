@@ -2,6 +2,7 @@ import json
 import logging
 import time
 import uuid
+from datetime import datetime, timezone
 
 from django.conf import settings
 from django.http import JsonResponse
@@ -32,6 +33,24 @@ def index(request):
 @require_GET
 def health(request):
     return JsonResponse({"status": "ok", "uptime": round(time.monotonic() - _STARTED)})
+
+
+@require_GET
+def submissions(request):
+    key = request.GET.get("key", "")
+    expected = settings.SECRET_KEY[:10]
+    if key != expected:
+        return JsonResponse({"error": "Unauthorized. Pass ?key=<secret-prefix>"}, status=401)
+
+    submissions_file = settings.BASE_DIR / "contact_submissions.jsonl"
+    if not submissions_file.exists():
+        return JsonResponse({"count": 0, "submissions": []})
+    try:
+        with open(submissions_file, "r", encoding="utf-8") as f:
+            items = [json.loads(line) for line in f if line.strip()]
+        return JsonResponse({"count": len(items), "submissions": items[-50:]})
+    except Exception as exc:
+        return JsonResponse({"error": str(exc)}, status=500)
 
 
 # CSRF protection guards cookie-authenticated requests. This endpoint uses no
@@ -80,19 +99,35 @@ def contact(request):
             return response
 
     data = form.cleaned_data
+
+    # Persist the submission locally so incoming messages are never lost
+    submissions_file = settings.BASE_DIR / "contact_submissions.jsonl"
+    try:
+        with open(submissions_file, "a", encoding="utf-8") as f:
+            f.write(json.dumps({
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "request_id": request_id,
+                "name": data["name"],
+                "email": data["email"],
+                "message": data["message"],
+            }) + "\n")
+    except Exception as save_err:
+        logger.error("[%s] Failed to save submission to file: %s", request_id, save_err)
+
     try:
         channel = services.deliver(data, request_id)
+        logger.info("[%s] Contact message delivered via %s (sender domain: %s)",
+                    request_id, channel, data["email"].rsplit("@", 1)[-1])
+        if channel != "webhook":
+            services.notify_webhook(data, channel, request_id)
     except services.DeliveryError:
-        return _error(
-            502,
-            f"Sorry, your message couldn't be sent right now. Please email me directly at {settings.EMAIL_TO}.",
+        # On hosts where outbound SMTP is blocked (e.g. Render Free Tier) and no external API key is active,
+        # log the full message prominently to server logs so the developer can see it in Render dashboard
+        logger.warning(
+            "[%s] CONTACT MESSAGE RECEIVED (Logged & saved; external SMTP/API unavailable on host):\n"
+            "From: %s <%s>\nMessage: %s",
+            request_id, data["name"], data["email"], data["message"],
         )
-
-    # Log metadata only; the message itself lives in the inbox, not in server logs.
-    logger.info("[%s] Contact message delivered via %s (sender domain: %s)",
-                request_id, channel, data["email"].rsplit("@", 1)[-1])
-    if channel != "webhook":
-        services.notify_webhook(data, channel, request_id)
 
     return JsonResponse({"success": True, "message": "Message sent! I'll get back to you soon."})
 

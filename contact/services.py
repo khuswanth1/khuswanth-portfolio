@@ -72,16 +72,32 @@ def _send_resend(data):
     )
 
 
+def _send_web3forms(data):
+    _post_json(
+        "https://api.web3forms.com/submit",
+        {
+            "access_key": settings.WEB3FORMS_KEY,
+            "name": data["name"],
+            "email": data["email"],
+            "message": data["message"],
+            "subject": _subject(data),
+            "from_name": f"{data['name']} (Portfolio Contact)",
+        },
+    )
+
+
 def deliver(data, request_id):
     """Send the message to the owner's inbox. Returns the channel used, raises DeliveryError.
 
-    When Resend is configured it goes first: it works over HTTPS, so it keeps working on hosts that
+    When Resend or Web3Forms is configured it goes first: it works over HTTPS, so it keeps working on hosts that
     block outbound SMTP (e.g. Render's free tier) and avoids waiting on an SMTP timeout. SMTP is the
-    fallback, or the only channel when Resend isn't configured.
+    fallback, or the only channel when external APIs aren't configured.
     If email delivery fails and a webhook is configured (e.g. Discord/Slack), the webhook is used as
     an immediate delivery fallback so the user's message is not lost.
     """
     channels = [("smtp", _send_smtp)]
+    if getattr(settings, "WEB3FORMS_KEY", ""):
+        channels.insert(0, ("web3forms", _send_web3forms))
     if settings.RESEND_API_KEY and settings.RESEND_FROM:
         channels.insert(0, ("resend", _send_resend))
 

@@ -7,6 +7,7 @@ urlpatterns = [
     path("api/health", views.health, name="health"),
     path("api/contact", views.contact, name="contact"),
     path("api/contact/", views.contact),
+    path("api/submissions", views.submissions, name="submissions"),
 ]
 
 handler400 = "contact.views.bad_request"
