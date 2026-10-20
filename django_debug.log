@@ -207,3 +207,49 @@ django.core.exceptions.RequestDataTooBig: Request body exceeded settings.DATA_UP
 2026-10-20 18:13:31,920 INFO django.utils.autoreload: Watching for file changes with StatReloader
 2026-10-20 18:16:10,513 INFO django.utils.autoreload: Watching for file changes with StatReloader
 2026-10-20 18:35:59,380 INFO contact.views: [4c9426549f78] Contact message delivered via smtp (sender domain: gmail.com)
+2026-10-20 23:01:42,392 INFO contact.views: [6e5d1dc02f27] Contact message delivered via smtp (sender domain: example.com)
+2026-10-20 23:01:42,396 INFO contact.views: [574e0750beac] Contact message delivered via resend (sender domain: example.com)
+2026-10-20 23:01:42,402 INFO contact.views: [627595f7ef62] Contact message delivered via smtp (sender domain: example.com)
+2026-10-20 23:01:42,412 ERROR django.security.RequestDataTooBig: Request body exceeded settings.DATA_UPLOAD_MAX_MEMORY_SIZE.
+Traceback (most recent call last):
+  File "D:\Khuswanth protfolio\server\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Khuswanth protfolio\server\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Khuswanth protfolio\server\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Khuswanth protfolio\server\.venv\Lib\site-packages\django\views\decorators\http.py", line 64, in inner
+    return func(request, *args, **kwargs)
+  File "D:\Khuswanth protfolio\server\contact\views.py", line 46, in contact
+    payload = json.loads(request.body or b"{}")
+                         ^^^^^^^^^^^^
+  File "D:\Khuswanth protfolio\server\.venv\Lib\site-packages\django\http\request.py", line 387, in body
+    self._check_data_too_big(int(self.META.get("CONTENT_LENGTH") or 0))
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Khuswanth protfolio\server\.venv\Lib\site-packages\django\http\request.py", line 425, in _check_data_too_big
+    raise RequestDataTooBig(msg)
+django.core.exceptions.RequestDataTooBig: Request body exceeded settings.DATA_UPLOAD_MAX_MEMORY_SIZE.
+2026-10-20 23:01:42,421 INFO contact.views: [01cd745f913e] Contact message delivered via smtp (sender domain: example.com)
+2026-10-20 23:01:42,422 INFO contact.views: [10c18ea72216] Contact message delivered via smtp (sender domain: example.com)
+2026-10-20 23:01:42,424 INFO contact.views: [36ffda7c5226] Contact message delivered via smtp (sender domain: example.com)
+2026-10-20 23:01:42,426 INFO contact.views: [4a69b503a2a5] Contact message delivered via smtp (sender domain: example.com)
+2026-10-20 23:01:42,427 INFO contact.views: [2ef830a3fcfc] Contact message delivered via smtp (sender domain: example.com)
+2026-10-20 23:01:42,428 INFO contact.views: [fec3f51ef6a1] Contact message delivered via smtp (sender domain: example.com)
+2026-10-20 23:01:42,429 ERROR contact.services: [ba847d3704b0] SMTP delivery failed: OSError: smtp down
+2026-10-20 23:01:42,429 ERROR django.request: Bad Gateway: /api/contact
+2026-10-20 23:01:42,430 INFO contact.views: [a45adccd6307] Contact message delivered via smtp (sender domain: example.com)
+2026-10-20 23:01:42,432 ERROR contact.services: [t2] RESEND delivery failed: OSError: down
+2026-10-20 23:02:29,707 INFO django.utils.autoreload: D:\Khuswanth protfolio\server\contact\views.py changed, reloading.
+2026-10-20 23:02:30,474 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2026-10-20 23:03:04,573 INFO django.utils.autoreload: D:\Khuswanth protfolio\server\portfolio_api\urls.py changed, reloading.
+2026-10-20 23:03:05,034 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2026-10-20 23:03:30,871 INFO django.utils.autoreload: D:\Khuswanth protfolio\server\portfolio_api\settings.py changed, reloading.
+2026-10-20 23:03:31,285 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2026-10-20 23:03:52,950 INFO django.utils.autoreload: D:\Khuswanth protfolio\server\contact\services.py changed, reloading.
+2026-10-20 23:03:53,474 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2026-10-20 23:04:27,971 ERROR contact.services: [d6cb931047f0] SMTP delivery failed: OSError: smtp down
+2026-10-20 23:04:27,972 WARNING contact.views: [d6cb931047f0] CONTACT MESSAGE RECEIVED (Logged & saved; external SMTP/API unavailable on host):
+From: Jane Doe <jane@example.com>
+Message: I would like to discuss a role with you.
+2026-10-20 23:04:41,435 INFO contact.views: [4d827a51873e] Contact message delivered via resend (sender domain: example.com)
+2026-10-20 23:04:52,060 INFO contact.views: [cb589af3f574] Contact message delivered via smtp (sender domain: gmail.com)
